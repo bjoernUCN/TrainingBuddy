@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Navigation
@@ -19,7 +20,7 @@ namespace Navigation
 		
 		public override void ButtonClicked()
 		{
-			throw new NotImplementedException();
+			SceneManager.LoadScene(_sceneReference.SceneName);
 		}
 	}
 }

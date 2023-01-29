@@ -27,7 +27,7 @@ namespace Navigation
 
 		public void OnAfterDeserialize()
 		{
-			throw new System.NotImplementedException();
+			// throw new System.NotImplementedException();
 		}
 	}
 }
