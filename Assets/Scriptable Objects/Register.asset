@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dac31a3d96b485682818a1c7b275f43, type: 3}
+  m_Name: Register
+  m_EditorClassIdentifier: 
+  _sceneName: S_Register
+  _scene: {fileID: 102900000, guid: 4db1ee143e4c4624396e81dbae2a65c2, type: 3}

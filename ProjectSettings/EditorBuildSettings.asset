@@ -6,14 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/S_Highscore.unity
-    guid: a4f8b7dc75f1b98468efd43cfe8ed945
+    path: Assets/Scenes/S_Login.unity
+    guid: bf946b704962857468d5dba48cd0b8c9
+  - enabled: 1
+    path: Assets/Scenes/S_Register.unity
+    guid: 4db1ee143e4c4624396e81dbae2a65c2
   - enabled: 1
     path: Assets/Scenes/S_Home.unity
     guid: c850ee8c3b14cc8459e7e186857cf567
   - enabled: 1
     path: Assets/Scenes/S_Profile.unity
     guid: c360435bf3d988049bbf3d8dcec4aad6
+  - enabled: 1
+    path: Assets/Scenes/S_Highscore.unity
+    guid: a4f8b7dc75f1b98468efd43cfe8ed945
   - enabled: 1
     path: Assets/Scenes/S_Race.unity
     guid: 519ff45808c3737448b76a6d210cd66d
