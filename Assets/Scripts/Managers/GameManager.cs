@@ -1,16 +1,25 @@
-using Managers;
+using TrainingBuddy.Users;
+using UnityEngine;
 
-public class GameManager : Singleton<GameManager>
+namespace TrainingBuddy.Managers
 {
-    // // Start is called before the first frame update
-    // void Start()
-    // {
-    //     
-    // }
-    //
-    // // Update is called once per frame
-    // void Update()
-    // {
-    //     
-    // }
+	public class GameManager : Singleton<GameManager>
+	{
+		public static GameManager instance;
+		
+		[field:SerializeField] public UserData UserData { get; private set; }
+		
+		private new void Awake()
+		{
+			if (instance == null)
+			{
+				instance = this;
+			}
+			else if (instance != null)
+			{
+				Debug.Log("Instance already exists, destroying object!");
+				Destroy(this);
+			}
+		}
+	}
 }
