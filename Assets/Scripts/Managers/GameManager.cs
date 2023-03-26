@@ -1,5 +1,7 @@
+using System;
 using TrainingBuddy.Users;
 using UnityEngine;
+using UnityEngine.Android;
 
 namespace TrainingBuddy.Managers
 {
@@ -19,6 +21,11 @@ namespace TrainingBuddy.Managers
 			{
 				Debug.Log("Instance already exists, destroying object!");
 				Destroy(this);
+			}
+
+			if (!Permission.HasUserAuthorizedPermission("android.permission.ACTIVITY_RECOGNITION"))
+			{
+				Permission.RequestUserPermission("android.permission.ACTIVITY_RECOGNITION");
 			}
 		}
 	}

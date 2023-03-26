@@ -1055,11 +1055,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d620246c0c244df1b4c5534bd5137cf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  expIncrease: 500
   <Username>k__BackingField: {fileID: 8638322721076828060}
   <SkillPoints>k__BackingField: {fileID: 7630939048194293362}
   <AccelerationPoints>k__BackingField: {fileID: 1702048474789588875}
   <SpeedPoints>k__BackingField: {fileID: 4678598648212502699}
+  <Level>k__BackingField: {fileID: 8087436768453061235}
   <ExperiencePoints>k__BackingField: {fileID: 1268508089413541710}
+  <ExpBarFill>k__BackingField: {fileID: 6447308992245776588}
   <StepTest>k__BackingField: {fileID: 48240943515986254}
 --- !u!1 &5913300640729631070
 GameObject:

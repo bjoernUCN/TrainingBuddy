@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace TrainingBuddy.Managers
@@ -6,9 +7,12 @@ namespace TrainingBuddy.Managers
 	{
 		public static UIManager instance;
 
+		[SerializeField] private GameObject tutorialUI_01;
+		[SerializeField] private GameObject tutorialUI_02;
+		[SerializeField] private GameObject tutorialUI_03;
 		[SerializeField] private GameObject loginUI;
 		[SerializeField] private GameObject registerUI;
-		[SerializeField] private GameObject ProfileUI;
+		[SerializeField] private GameObject profileUI;
 
 		private new void Awake()
 		{
@@ -27,9 +31,30 @@ namespace TrainingBuddy.Managers
 		{
 			loginUI.SetActive(false);
 			registerUI.SetActive(false);
-			ProfileUI.SetActive(false);
+			profileUI.SetActive(false);
+			tutorialUI_01.SetActive(false);
+			tutorialUI_02.SetActive(false);
+			tutorialUI_03.SetActive(false);
 		}
 
+		public void TutorialScreen01()
+		{
+			ClearScreen();
+			tutorialUI_01.SetActive(true);
+		}
+		
+		public void TutorialScreen02()
+		{
+			ClearScreen();
+			tutorialUI_02.SetActive(true);
+		}
+		
+		public void TutorialScreen03()
+		{
+			ClearScreen();
+			tutorialUI_03.SetActive(true);
+		}
+		
 		public void LoginScreen()
 		{
 			ClearScreen();
@@ -44,7 +69,12 @@ namespace TrainingBuddy.Managers
 		public void ProfileScreen()
 		{
 			ClearScreen();
-			ProfileUI.SetActive(true);
+			profileUI.SetActive(true);
+			if (DatabaseManager.Instance.Auth.CurrentUser == null)
+			{
+				LoginScreen();
+				return;
+			}
 			StartCoroutine(GameManager.Instance.UserData.LoadUserData());
 		}
 	}

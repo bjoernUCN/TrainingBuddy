@@ -19,6 +19,11 @@ namespace TrainingBuddy.Users
 			StartCoroutine(LoginRoutine(emailLoginField.text, passwordLoginField.text));
 		}
 		
+		public void TestLogin()
+		{
+			StartCoroutine(LoginRoutine("test@test.dk", "12341234"));
+		}
+		
 		public void ClearLoginFields()
 		{
 		    emailLoginField.text = "";
@@ -63,8 +68,7 @@ namespace TrainingBuddy.Users
 	        {
 		        //User is now logged in
 		        //Now get the result
-		        DatabaseManager.Instance.User = LoginTask.Result;
-		        Debug.LogFormat("User signed in successfully: {0} ({1})", DatabaseManager.Instance.User.DisplayName, DatabaseManager.Instance.User.Email);
+		        Debug.LogFormat("User signed in successfully: {0} ({1})", DatabaseManager.Instance.Auth.CurrentUser.DisplayName, DatabaseManager.Instance.Auth.CurrentUser.Email);
 
 		        // StartCoroutine(LoadUserData());
 

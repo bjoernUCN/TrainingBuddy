@@ -1,9 +1,9 @@
 {
     "m_SelectedDeviceId": "a965c9be",
     "m_SelectedPackage": {
-        "deviceId": "a965c9be",
-        "name": "com.DefaultCompany.TrainingBuddy",
-        "processId": 24426,
+        "deviceId": "",
+        "name": "",
+        "processId": 0,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -12,18 +12,24 @@
             "deviceId": "a965c9be",
             "name": "com.DefaultCompany.TrainingBuddy",
             "processId": 17301,
-            "exited": false
+            "exited": true
         },
         {
             "deviceId": "a965c9be",
             "name": "com.DefaultCompany.TrainingBuddy",
             "processId": 17302,
-            "exited": false
+            "exited": true
         },
         {
             "deviceId": "a965c9be",
             "name": "com.DefaultCompany.TrainingBuddy",
             "processId": 24426,
+            "exited": true
+        },
+        {
+            "deviceId": "a965c9be",
+            "name": "com.android.launcher",
+            "processId": 4590,
             "exited": false
         }
     ],
