@@ -103,6 +103,7 @@ namespace TrainingBuddy.Users
 	                        StartCoroutine(GameManager.Instance.UserData.UpdateExperiencePoints(0));
 	                        StartCoroutine(GameManager.Instance.UserData.UpdateLevel(1));
 	                        StartCoroutine(GameManager.Instance.UserData.UpdateStepSnapshot(0));
+	                        GameManager.Instance.UserData.LocationUpdater = StartCoroutine(GameManager.Instance.UserData.UpdateLocation());
 	                        UIManager.instance.LoginScreen();                        
 	                        // warningRegisterText.text = "";
 	                        // ClearRegisterFields();

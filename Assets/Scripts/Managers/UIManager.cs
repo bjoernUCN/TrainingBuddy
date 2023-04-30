@@ -75,6 +75,14 @@ namespace TrainingBuddy.Managers
 				LoginScreen();
 				return;
 			}
+
+			if (GameManager.Instance.UserData.LocationUpdater != null)
+			{
+				StopCoroutine(GameManager.Instance.UserData.LocationUpdater);
+				GameManager.Instance.UserData.LocationUpdater = null;
+			}
+			GameManager.Instance.UserData.LocationUpdater = StartCoroutine(GameManager.Instance.UserData.UpdateLocation());
+			
 			StartCoroutine(GameManager.Instance.UserData.LoadUserData());
 		}
 	}

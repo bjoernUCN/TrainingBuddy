@@ -1,35 +1,41 @@
 {
     "m_SelectedDeviceId": "a965c9be",
     "m_SelectedPackage": {
-        "deviceId": "",
-        "name": "",
-        "processId": 0,
+        "deviceId": "a965c9be",
+        "name": "com.TrainingBuddyInc.TrainingBuddy",
+        "processId": 22602,
         "exited": false
     },
     "m_SelectedPriority": 0,
     "m_KnownPackagesForSerialization": [
         {
             "deviceId": "a965c9be",
-            "name": "com.DefaultCompany.TrainingBuddy",
-            "processId": 17301,
-            "exited": true
-        },
-        {
-            "deviceId": "a965c9be",
-            "name": "com.DefaultCompany.TrainingBuddy",
-            "processId": 17302,
-            "exited": true
-        },
-        {
-            "deviceId": "a965c9be",
-            "name": "com.DefaultCompany.TrainingBuddy",
-            "processId": 24426,
-            "exited": true
-        },
-        {
-            "deviceId": "a965c9be",
             "name": "com.android.launcher",
             "processId": 4590,
+            "exited": true
+        },
+        {
+            "deviceId": "a965c9be",
+            "name": "com.TrainingBuddyInc.TrainingBuddy",
+            "processId": 16574,
+            "exited": true
+        },
+        {
+            "deviceId": "a965c9be",
+            "name": "com.TrainingBuddyInc.TrainingBuddy",
+            "processId": 17225,
+            "exited": true
+        },
+        {
+            "deviceId": "a965c9be",
+            "name": "com.TrainingBuddyInc.TrainingBuddy",
+            "processId": 21824,
+            "exited": true
+        },
+        {
+            "deviceId": "a965c9be",
+            "name": "com.TrainingBuddyInc.TrainingBuddy",
+            "processId": 22602,
             "exited": false
         }
     ],
