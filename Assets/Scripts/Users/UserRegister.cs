@@ -44,7 +44,7 @@ namespace TrainingBuddy.Users
 	        else 
 	        {
 	            //Call the Firebase auth signin function passing the email and password
-	            var RegisterTask = FirebaseManager.Instance.Auth.CreateUserWithEmailAndPasswordAsync(email, password);
+	            var RegisterTask = DatabaseManager.Instance.Auth.CreateUserWithEmailAndPasswordAsync(email, password);
 	            //Wait until the task completes
 	            yield return new WaitUntil(predicate: () => RegisterTask.IsCompleted);
 	    
@@ -76,13 +76,13 @@ namespace TrainingBuddy.Users
 	            else
 	            {
 	    
-	                if (FirebaseManager.Instance.Auth.CurrentUser != null)
+	                if (DatabaseManager.Instance.Auth.CurrentUser != null)
 	                {
 	                    //Create a user profile and set the username
 	                    UserProfile profile = new UserProfile{DisplayName = username};
 	    
 	                    //Call the Firebase auth update user profile function passing the profile with the username
-	                    var ProfileTask = FirebaseManager.Instance.Auth.CurrentUser.UpdateUserProfileAsync(profile);
+	                    var ProfileTask = DatabaseManager.Instance.Auth.CurrentUser.UpdateUserProfileAsync(profile);
 	                    //Wait until the task completes
 	                    yield return new WaitUntil(predicate: () => ProfileTask.IsCompleted);
 	    

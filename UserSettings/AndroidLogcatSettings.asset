@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "a965c9be",
         "name": "com.TrainingBuddyInc.TrainingBuddy",
-        "processId": 5256,
+        "processId": 32602,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -17,55 +17,31 @@
         {
             "deviceId": "a965c9be",
             "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 28573,
+            "processId": 5910,
             "exited": true
         },
         {
             "deviceId": "a965c9be",
             "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 31460,
+            "processId": 7169,
             "exited": true
         },
         {
             "deviceId": "a965c9be",
             "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 22838,
+            "processId": 12616,
             "exited": true
         },
         {
             "deviceId": "a965c9be",
             "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 24879,
+            "processId": 13226,
             "exited": true
         },
         {
             "deviceId": "a965c9be",
             "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 32038,
-            "exited": false
-        },
-        {
-            "deviceId": "a965c9be",
-            "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 5251,
-            "exited": false
-        },
-        {
-            "deviceId": "a965c9be",
-            "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 30608,
-            "exited": false
-        },
-        {
-            "deviceId": "a965c9be",
-            "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 1334,
-            "exited": false
-        },
-        {
-            "deviceId": "a965c9be",
-            "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 5256,
+            "processId": 32602,
             "exited": false
         }
     ],

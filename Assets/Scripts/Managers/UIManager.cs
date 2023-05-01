@@ -71,7 +71,7 @@ namespace TrainingBuddy.Managers
 		{
 			ClearScreen();
 			profileUI.SetActive(true);
-			if (FirebaseManager.Instance.Auth.CurrentUser == null)
+			if (DatabaseManager.Instance.Auth.CurrentUser == null)
 			{
 				LoginScreen();
 				return;
@@ -96,12 +96,12 @@ namespace TrainingBuddy.Managers
 				StartCoroutine(GameManager.Instance.UserData.UpdateStepSnapshot());
 			}
 
-			if (GameManager.Instance.UserData.LocationUpdater != null)
-			{
-				StopCoroutine(GameManager.Instance.UserData.LocationUpdater);
-				GameManager.Instance.UserData.LocationUpdater = null;
-			}
-			GameManager.Instance.UserData.LocationUpdater = StartCoroutine(GameManager.Instance.UserData.UpdateLocation());
+			// if (GameManager.Instance.UserData.LocationUpdater != null)
+			// {
+			// 	StopCoroutine(GameManager.Instance.UserData.LocationUpdater);
+			// 	GameManager.Instance.UserData.LocationUpdater = null;
+			// }
+			// GameManager.Instance.UserData.LocationUpdater = StartCoroutine(GameManager.Instance.UserData.UpdateLocation());
 
 			GameManager.Instance.UserData.LoadUserData();
 		}

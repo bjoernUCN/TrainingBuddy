@@ -36,7 +36,7 @@ namespace TrainingBuddy.Users
 
 		private IEnumerator SnapshotDatabase()
 		{
-			var DBTask = FirebaseManager.Instance.databaseReference.Child("Users").Child(FirebaseManager.Instance.Auth.CurrentUser.UserId).GetValueAsync();
+			var DBTask = DatabaseManager.Instance.DatabaseReference.Child("Users").Child(DatabaseManager.Instance.Auth.CurrentUser.UserId).GetValueAsync();
 		
 			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 		
@@ -56,25 +56,29 @@ namespace TrainingBuddy.Users
 
 		public void LoadUserData()
 		{
-			StartCoroutine(SnapshotDatabase());
-
-			if (UserDBSnapshot == null)
+			DatabaseManager.Instance.ReadUserData(dbTask =>
 			{
-				return;
-			}
-		        
-			Username.text = UserDBSnapshot.Child("UserName").Value.ToString();
-			SkillPoints.text = "Skill Points: " + UserDBSnapshot.Child("SkillPoints").Value;
-			AccelerationPoints.text = UserDBSnapshot.Child("AccelerationPoints").Value.ToString();
-			SpeedPoints.text = UserDBSnapshot.Child("SpeedPoints").Value.ToString();
+				if (dbTask.IsFaulted)
+				{
+					Debug.LogError("Error reading user data: " + dbTask.Exception);
+				}
+				else if (dbTask.IsCompleted)
+				{
+					DataSnapshot dataSnapshot = dbTask.Result;
+					Username.text = dataSnapshot.Child("UserName").Value.ToString();
+					SkillPoints.text = "Skill Points: " + dataSnapshot.Child("SkillPoints").Value;
+					AccelerationPoints.text = dataSnapshot.Child("AccelerationPoints").Value.ToString();
+					SpeedPoints.text = dataSnapshot.Child("SpeedPoints").Value.ToString();
 
-			var expInt = Convert.ToInt32(UserDBSnapshot.Child("ExperiencePoints").Value);
-			int userLevel = Mathf.CeilToInt(expInt / expIncrease);
-			float maxExp = userLevel * expIncrease;
+					var expInt = Convert.ToInt32(dataSnapshot.Child("ExperiencePoints").Value);
+					int userLevel = Mathf.CeilToInt(expInt / expIncrease);
+					float maxExp = userLevel * expIncrease;
 		        
-			Level.text = "Level: " + userLevel;
-			ExperiencePoints.text = UserDBSnapshot.Child("ExperiencePoints").Value + "/"+ maxExp +" XP";
-			ExpBarFill.fillAmount = expInt / maxExp;
+					Level.text = "Level: " + userLevel;
+					ExperiencePoints.text = dataSnapshot.Child("ExperiencePoints").Value + "/"+ maxExp +" XP";
+					ExpBarFill.fillAmount = expInt / maxExp;
+				}
+			});
 		}
 
 		public object LoadUserData(string field)
@@ -106,7 +110,7 @@ namespace TrainingBuddy.Users
 		public IEnumerator UpdateUsernameDatabase(string username)
 		{
 			//Set the currently logged in user username in the database
-			var DBTask = FirebaseManager.Instance.databaseReference.Child("Users").Child(FirebaseManager.Instance.Auth.CurrentUser.UserId).Child("UserName").SetValueAsync(username);
+			var DBTask = DatabaseManager.Instance.DatabaseReference.Child("Users").Child(DatabaseManager.Instance.Auth.CurrentUser.UserId).Child("UserName").SetValueAsync(username);
 		
 			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 		
@@ -119,7 +123,7 @@ namespace TrainingBuddy.Users
 		public IEnumerator UpdateSkillPoints(int skillPoints)
 		{
 		    //Set the currently logged in user deaths
-		    var DBTask = FirebaseManager.Instance.databaseReference.Child("Users").Child(FirebaseManager.Instance.Auth.CurrentUser.UserId).Child("SkillPoints").SetValueAsync(skillPoints);
+		    var DBTask = DatabaseManager.Instance.DatabaseReference.Child("Users").Child(DatabaseManager.Instance.Auth.CurrentUser.UserId).Child("SkillPoints").SetValueAsync(skillPoints);
 		
 		    yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 		
@@ -136,7 +140,7 @@ namespace TrainingBuddy.Users
 		public IEnumerator UpdateAccelerationPoints(int accelerationPoints)
 		{
 			//Set the currently logged in user deaths
-			var DBTask = FirebaseManager.Instance.databaseReference.Child("Users").Child(FirebaseManager.Instance.Auth.CurrentUser.UserId).Child("AccelerationPoints").SetValueAsync(accelerationPoints);
+			var DBTask = DatabaseManager.Instance.DatabaseReference.Child("Users").Child(DatabaseManager.Instance.Auth.CurrentUser.UserId).Child("AccelerationPoints").SetValueAsync(accelerationPoints);
 		
 			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 		
@@ -153,7 +157,7 @@ namespace TrainingBuddy.Users
 		public IEnumerator UpdateSpeedPoints(int speedPoints)
 		{
 			//Set the currently logged in user deaths
-			var DBTask = FirebaseManager.Instance.databaseReference.Child("Users").Child(FirebaseManager.Instance.Auth.CurrentUser.UserId).Child("SpeedPoints").SetValueAsync(speedPoints);
+			var DBTask = DatabaseManager.Instance.DatabaseReference.Child("Users").Child(DatabaseManager.Instance.Auth.CurrentUser.UserId).Child("SpeedPoints").SetValueAsync(speedPoints);
 		
 			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 		
@@ -170,7 +174,7 @@ namespace TrainingBuddy.Users
 		public IEnumerator UpdateExperiencePoints(int experiencePoints)
 		{
 			//Set the currently logged in user deaths
-			var DBTask = FirebaseManager.Instance.databaseReference.Child("Users").Child(FirebaseManager.Instance.Auth.CurrentUser.UserId).Child("ExperiencePoints").SetValueAsync(experiencePoints);
+			var DBTask = DatabaseManager.Instance.DatabaseReference.Child("Users").Child(DatabaseManager.Instance.Auth.CurrentUser.UserId).Child("ExperiencePoints").SetValueAsync(experiencePoints);
 		
 			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 		
@@ -187,7 +191,7 @@ namespace TrainingBuddy.Users
 		public IEnumerator UpdateLevel(int level)
 		{
 			//Set the currently logged in user deaths
-			var DBTask = FirebaseManager.Instance.databaseReference.Child("Users").Child(FirebaseManager.Instance.Auth.CurrentUser.UserId).Child("Level").SetValueAsync(level);
+			var DBTask = DatabaseManager.Instance.DatabaseReference.Child("Users").Child(DatabaseManager.Instance.Auth.CurrentUser.UserId).Child("Level").SetValueAsync(level);
 		
 			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 		
@@ -203,70 +207,71 @@ namespace TrainingBuddy.Users
 		
 		public IEnumerator UpdateStepSnapshot(int? snapshot = null)
 		{
-			if (snapshot != null)
-			{
-				var DBTask = FirebaseManager.Instance.databaseReference.Child("Users").Child(FirebaseManager.Instance.Auth.CurrentUser.UserId).Child("StepSnapshot").SetValueAsync(snapshot);
-		
-				yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
-		
-				if (DBTask.Exception != null)
-				{
-					Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
-				}
-				
-				// Do shit
-				
-				yield return true;
-			}
-			
-			while (true)
-			{
-				if (StepCounter.current == null)
-				{
-					InputSystem.AddDevice<StepCounter>();
-				}
-			       
-				if (!StepCounter.current.enabled)
-				{
-					InputSystem.EnableDevice(StepCounter.current);
-					if (StepCounter.current.enabled)
-					{
-						Debug.Log("StepCounter is enabled");
-					}
-				}
-				
-				if (StepCounter.current != null)
-				{
-					var stepSnapshot = FirebaseManager.Instance.ReadUserData("StepSnapshot").Value;
-					// Update Snapshot
-					// var stepSnapshot = LoadUserData("StepSnapshot");
-					int.TryParse(stepSnapshot.ToString() , out int stepSnapshotInt);
-					if (stepSnapshotInt == -1 || (StepCounter.current.stepCounter.ReadValue() < stepSnapshotInt && StepCounter.current.stepCounter.ReadValue() != 0))
-					{
-						var SnapshotTask = FirebaseManager.Instance.databaseReference.Child("Users").Child(FirebaseManager.Instance.Auth.CurrentUser.UserId).Child("StepSnapshot").SetValueAsync(stepSnapshot);
-		
-						yield return new WaitUntil(predicate: () => SnapshotTask.IsCompleted);
-		
-						if (SnapshotTask.Exception != null)
-						{
-							Debug.LogWarning(message: $"Failed to register task with {SnapshotTask.Exception}");
-						}
-					}
-					
-					var steps = StepCounter.current.stepCounter.ReadValue() - (int)stepSnapshot;
-					
-					var StepTask = FirebaseManager.Instance.databaseReference.Child("Users").Child(FirebaseManager.Instance.Auth.CurrentUser.UserId).Child("Steps").SetValueAsync(steps);
-		
-					yield return new WaitUntil(predicate: () => StepTask.IsCompleted);
-		
-					if (StepTask.Exception != null)
-					{
-						Debug.LogWarning(message: $"Failed to register task with {StepTask.Exception}");
-					}
-					
-					yield return new WaitForSeconds(20f);
-				}
-			}
+			// if (snapshot != null)
+			// {
+			// 	var DBTask = DatabaseManager.Instance.DatabaseReference.Child("Users").Child(DatabaseManager.Instance.Auth.CurrentUser.UserId).Child("StepSnapshot").SetValueAsync(snapshot);
+			//
+			// 	yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
+			//
+			// 	if (DBTask.Exception != null)
+			// 	{
+			// 		Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
+			// 	}
+			// 	
+			// 	// Do shit
+			// 	
+			// 	yield return true;
+			// }
+			//
+			// while (true)
+			// {
+			// 	if (StepCounter.current == null)
+			// 	{
+			// 		InputSystem.AddDevice<StepCounter>();
+			// 	}
+			//        
+			// 	if (!StepCounter.current.enabled)
+			// 	{
+			// 		InputSystem.EnableDevice(StepCounter.current);
+			// 		if (StepCounter.current.enabled)
+			// 		{
+			// 			Debug.Log("StepCounter is enabled");
+			// 		}
+			// 	}
+			// 	
+			// 	if (StepCounter.current != null)
+			// 	{
+			// 		var stepSnapshot = DatabaseManager.Instance.ReadUserData("StepSnapshot").Result.Value;
+			// 		// Update Snapshot
+			// 		// var stepSnapshot = LoadUserData("StepSnapshot");
+			// 		int.TryParse(stepSnapshot.ToString() , out int stepSnapshotInt);
+			// 		if (stepSnapshotInt == -1 || (StepCounter.current.stepCounter.ReadValue() < stepSnapshotInt && StepCounter.current.stepCounter.ReadValue() != 0))
+			// 		{
+			// 			var SnapshotTask = DatabaseManager.Instance.DatabaseReference.Child("Users").Child(DatabaseManager.Instance.Auth.CurrentUser.UserId).Child("StepSnapshot").SetValueAsync(stepSnapshot);
+			// 	
+			// 			yield return new WaitUntil(predicate: () => SnapshotTask.IsCompleted);
+			// 	
+			// 			if (SnapshotTask.Exception != null)
+			// 			{
+			// 				Debug.LogWarning(message: $"Failed to register task with {SnapshotTask.Exception}");
+			// 			}
+			// 		}
+			// 		
+			// 		var steps = StepCounter.current.stepCounter.ReadValue() - (int)stepSnapshot;
+			// 		
+			// 		var StepTask = DatabaseManager.Instance.DatabaseReference.Child("Users").Child(DatabaseManager.Instance.Auth.CurrentUser.UserId).Child("Steps").SetValueAsync(steps);
+			// 	
+			// 		yield return new WaitUntil(predicate: () => StepTask.IsCompleted);
+			// 	
+			// 		if (StepTask.Exception != null)
+			// 		{
+			// 			Debug.LogWarning(message: $"Failed to register task with {StepTask.Exception}");
+			// 		}
+			// 		
+			// 		yield return new WaitForSeconds(20f);
+			// 	}
+			// }
+			yield return true;
 		}
 
 		private void HandleStepSnapshotCallback(DataSnapshot obj)
@@ -294,7 +299,7 @@ namespace TrainingBuddy.Users
 					yield break;
 				}
 
-				var DBTask = FirebaseManager.Instance.databaseReference.Child("Users").Child(FirebaseManager.Instance.Auth.CurrentUser.UserId).Child("Location").SetValueAsync(Input.location.lastData.latitude + " " + Input.location.lastData.longitude);
+				var DBTask = DatabaseManager.Instance.DatabaseReference.Child("Users").Child(DatabaseManager.Instance.Auth.CurrentUser.UserId).Child("Location").SetValueAsync(Input.location.lastData.latitude + " " + Input.location.lastData.longitude);
 				
 				yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 				
