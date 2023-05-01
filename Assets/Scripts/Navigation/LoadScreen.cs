@@ -20,7 +20,7 @@ namespace TrainingBuddy.Navigation
 					break;
 				case UIScreen.ProfileScreen:
 					UIManager.instance.ProfileScreen();
-					StartCoroutine(GameManager.Instance.UserData.LoadUserData());
+					GameManager.Instance.UserData.LoadUserData();
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();

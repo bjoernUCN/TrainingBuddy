@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace TrainingBuddy.Managers
 {
@@ -70,10 +71,29 @@ namespace TrainingBuddy.Managers
 		{
 			ClearScreen();
 			profileUI.SetActive(true);
-			if (DatabaseManager.Instance.Auth.CurrentUser == null)
+			if (FirebaseManager.Instance.Auth.CurrentUser == null)
 			{
 				LoginScreen();
 				return;
+			}
+			
+			if (StepCounter.current == null)
+			{
+				InputSystem.AddDevice<StepCounter>();
+			}
+		        
+			if (!StepCounter.current.enabled)
+			{
+				InputSystem.EnableDevice(StepCounter.current);
+				if (StepCounter.current.enabled)
+				{
+					Debug.Log("StepCounter is enabled");
+				}
+			}
+			
+			if (StepCounter.current != null)
+			{
+				StartCoroutine(GameManager.Instance.UserData.UpdateStepSnapshot());
 			}
 
 			if (GameManager.Instance.UserData.LocationUpdater != null)
@@ -82,8 +102,8 @@ namespace TrainingBuddy.Managers
 				GameManager.Instance.UserData.LocationUpdater = null;
 			}
 			GameManager.Instance.UserData.LocationUpdater = StartCoroutine(GameManager.Instance.UserData.UpdateLocation());
-			
-			StartCoroutine(GameManager.Instance.UserData.LoadUserData());
+
+			GameManager.Instance.UserData.LoadUserData();
 		}
 	}
 

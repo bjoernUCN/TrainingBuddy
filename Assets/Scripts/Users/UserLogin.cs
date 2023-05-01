@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Firebase;
 using Firebase.Auth;
@@ -13,6 +14,8 @@ namespace TrainingBuddy.Users
 		[Header("Login")]
 		public TMP_InputField emailLoginField;
 		public TMP_InputField passwordLoginField;
+
+		private Coroutine stepSnapshotRoutine;
 
 		public void Login()
 		{
@@ -33,7 +36,7 @@ namespace TrainingBuddy.Users
 		private IEnumerator LoginRoutine(string _email, string _password)
 	    {
 	        //Call the Firebase auth signin function passing the email and password
-	        var LoginTask = DatabaseManager.Instance.Auth.SignInWithEmailAndPasswordAsync(_email, _password);
+	        var LoginTask = FirebaseManager.Instance.Auth.SignInWithEmailAndPasswordAsync(_email, _password);
 	        //Wait until the task completes
 	        yield return new WaitUntil(predicate: () => LoginTask.IsCompleted);
 	    
@@ -68,29 +71,16 @@ namespace TrainingBuddy.Users
 	        {
 		        //User is now logged in
 		        //Now get the result
-		        Debug.LogFormat("User signed in successfully: {0} ({1})", DatabaseManager.Instance.Auth.CurrentUser.DisplayName, DatabaseManager.Instance.Auth.CurrentUser.Email);
+		        Debug.LogFormat("User signed in successfully: {0} ({1})", FirebaseManager.Instance.Auth.CurrentUser.DisplayName, FirebaseManager.Instance.Auth.CurrentUser.Email);
 
 		        // StartCoroutine(LoadUserData());
 
 		        yield return new WaitForSeconds(2);
 
 		        // usernameField.text = _user.DisplayName;
-		        if (StepCounter.current == null)
-		        {
-			        InputSystem.AddDevice<StepCounter>();
-		        }
-		        
-		        if (!StepCounter.current.enabled)
-		        {
-			        InputSystem.EnableDevice(StepCounter.current);
-			        if (StepCounter.current.enabled)
-			        {
-				        Debug.Log("StepCounter is enabled");
-			        }
-		        }
 
-				UIManager.instance.ProfileScreen(); // Change to user data UI
-	            // warningLoginText.text = "";
+		        UIManager.instance.ProfileScreen();
+		        // warningLoginText.text = "";
 	            // ClearLoginFields();
 	            // ClearRegisterFields();
 	        }

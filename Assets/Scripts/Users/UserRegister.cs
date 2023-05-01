@@ -4,6 +4,7 @@ using Firebase.Auth;
 using TMPro;
 using TrainingBuddy.Managers;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace TrainingBuddy.Users
 {
@@ -43,7 +44,7 @@ namespace TrainingBuddy.Users
 	        else 
 	        {
 	            //Call the Firebase auth signin function passing the email and password
-	            var RegisterTask = DatabaseManager.Instance.Auth.CreateUserWithEmailAndPasswordAsync(email, password);
+	            var RegisterTask = FirebaseManager.Instance.Auth.CreateUserWithEmailAndPasswordAsync(email, password);
 	            //Wait until the task completes
 	            yield return new WaitUntil(predicate: () => RegisterTask.IsCompleted);
 	    
@@ -75,13 +76,13 @@ namespace TrainingBuddy.Users
 	            else
 	            {
 	    
-	                if (DatabaseManager.Instance.Auth.CurrentUser != null)
+	                if (FirebaseManager.Instance.Auth.CurrentUser != null)
 	                {
 	                    //Create a user profile and set the username
 	                    UserProfile profile = new UserProfile{DisplayName = username};
 	    
 	                    //Call the Firebase auth update user profile function passing the profile with the username
-	                    var ProfileTask = DatabaseManager.Instance.Auth.CurrentUser.UpdateUserProfileAsync(profile);
+	                    var ProfileTask = FirebaseManager.Instance.Auth.CurrentUser.UpdateUserProfileAsync(profile);
 	                    //Wait until the task completes
 	                    yield return new WaitUntil(predicate: () => ProfileTask.IsCompleted);
 	    
@@ -102,8 +103,24 @@ namespace TrainingBuddy.Users
 	                        StartCoroutine(GameManager.Instance.UserData.UpdateSpeedPoints(0));
 	                        StartCoroutine(GameManager.Instance.UserData.UpdateExperiencePoints(0));
 	                        StartCoroutine(GameManager.Instance.UserData.UpdateLevel(1));
-	                        StartCoroutine(GameManager.Instance.UserData.UpdateStepSnapshot(0));
-	                        GameManager.Instance.UserData.LocationUpdater = StartCoroutine(GameManager.Instance.UserData.UpdateLocation());
+	                        
+	                        if (StepCounter.current == null)
+	                        {
+		                        InputSystem.AddDevice<StepCounter>();
+	                        }
+		        
+	                        if (!StepCounter.current.enabled)
+	                        {
+		                        InputSystem.EnableDevice(StepCounter.current);
+		                        if (StepCounter.current.enabled)
+		                        {
+			                        Debug.Log("StepCounter is enabled");
+		                        }
+	                        }
+	                        
+		                    StartCoroutine(GameManager.Instance.UserData.UpdateStepSnapshot(-1));
+
+		                    GameManager.Instance.UserData.LocationUpdater = StartCoroutine(GameManager.Instance.UserData.UpdateLocation());
 	                        UIManager.instance.LoginScreen();                        
 	                        // warningRegisterText.text = "";
 	                        // ClearRegisterFields();
