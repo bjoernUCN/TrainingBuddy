@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.InputSystem;
 
 namespace TrainingBuddy.Managers
@@ -76,32 +77,13 @@ namespace TrainingBuddy.Managers
 				LoginScreen();
 				return;
 			}
-			
-			if (StepCounter.current == null)
-			{
-				InputSystem.AddDevice<StepCounter>();
-			}
-		        
-			if (!StepCounter.current.enabled)
-			{
-				InputSystem.EnableDevice(StepCounter.current);
-				if (StepCounter.current.enabled)
-				{
-					Debug.Log("StepCounter is enabled");
-				}
-			}
-			
-			if (StepCounter.current != null)
-			{
-				StartCoroutine(GameManager.Instance.UserData.UpdateStepSnapshot());
-			}
 
-			// if (GameManager.Instance.UserData.LocationUpdater != null)
-			// {
-			// 	StopCoroutine(GameManager.Instance.UserData.LocationUpdater);
-			// 	GameManager.Instance.UserData.LocationUpdater = null;
-			// }
-			// GameManager.Instance.UserData.LocationUpdater = StartCoroutine(GameManager.Instance.UserData.UpdateLocation());
+			if (GameManager.Instance.UserData.LocationUpdater != null)
+			{
+				StopCoroutine(GameManager.Instance.UserData.LocationUpdater);
+				GameManager.Instance.UserData.LocationUpdater = null;
+			}
+			GameManager.Instance.UserData.LocationUpdater = StartCoroutine(GameManager.Instance.UserData.UpdateLocation());
 
 			GameManager.Instance.UserData.LoadUserData();
 		}

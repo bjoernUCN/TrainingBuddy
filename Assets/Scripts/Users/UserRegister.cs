@@ -97,12 +97,14 @@ namespace TrainingBuddy.Users
 		                    Debug.Log("HUH?");
 	                        //Username is now set
 	                        //Now return to login screen
-	                        StartCoroutine(GameManager.Instance.UserData.UpdateUsernameDatabase(username));
-	                        StartCoroutine(GameManager.Instance.UserData.UpdateSkillPoints(0));
-	                        StartCoroutine(GameManager.Instance.UserData.UpdateAccelerationPoints(0));
-	                        StartCoroutine(GameManager.Instance.UserData.UpdateSpeedPoints(0));
-	                        StartCoroutine(GameManager.Instance.UserData.UpdateExperiencePoints(0));
-	                        StartCoroutine(GameManager.Instance.UserData.UpdateLevel(1));
+	                        
+	                        DatabaseManager.Instance.WriteUserData("UserName", username);
+	                        DatabaseManager.Instance.WriteUserData("SkillPoints", 0);
+	                        DatabaseManager.Instance.WriteUserData("AccelerationPoints", 0);
+	                        DatabaseManager.Instance.WriteUserData("SpeedPoints", 0);
+	                        DatabaseManager.Instance.WriteUserData("ExperiencePoints", 0);
+	                        DatabaseManager.Instance.WriteUserData("Level", 1);
+	                        // DatabaseManager.Instance.WriteUserData("Level", 1);
 	                        
 	                        if (StepCounter.current == null)
 	                        {

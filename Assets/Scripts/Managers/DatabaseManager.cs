@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Firebase;
 using Firebase.Auth;
@@ -53,13 +52,36 @@ namespace TrainingBuddy.Managers
 	    
 		private IEnumerator ReadUserDataCoroutine(string path, Action<Task<DataSnapshot>> callback)
 		{
-			Task<DataSnapshot> DBTask;
-
-			DBTask = path == "" ? DatabaseReference.Child("Users").Child(Auth.CurrentUser.UserId).GetValueAsync() : DatabaseReference.Child("Users").Child(Auth.CurrentUser.UserId).Child(path).GetValueAsync();
+			Task<DataSnapshot> DBTask = path == "" ? DatabaseReference.Child("Users").Child(Auth.CurrentUser.UserId).GetValueAsync() : DatabaseReference.Child("Users").Child(Auth.CurrentUser.UserId).Child(path).GetValueAsync();
 			
 			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 			
 			callback(DBTask);
+		}
+		
+		public void WriteUserData(string path, object data)
+		{
+			if (path == "")
+			{
+				return;
+			}
+			
+			StartCoroutine(WriteUserDataCoroutine(path, data));
+		}
+		
+		private IEnumerator WriteUserDataCoroutine(string path, object data)
+		{
+			Task DBTask = DatabaseReference.Child("Users").Child(Auth.CurrentUser.UserId).Child(path).SetValueAsync(data);
+
+			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
+
+			if (DBTask.Exception != null)
+			{
+				Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
+				yield return null;
+			}
+
+			yield return true;
 		}
 	    
 	    public IEnumerator SignIn(string _email, string _password)

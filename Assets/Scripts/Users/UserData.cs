@@ -4,6 +4,7 @@ using Firebase.Database;
 using TMPro;
 using TrainingBuddy.Managers;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -25,34 +26,6 @@ namespace TrainingBuddy.Users
 		public Coroutine LocationUpdater;
 		
 		[field:SerializeField] public TMP_Text StepTest { get; set; }
-
-		private void Update()
-		{
-			// if (StepCounter.current != null && snapshotSuccess)
-			// {
-			// 	StepTest.text = "Step test: " + (StepCounter.current.stepCounter.ReadValue() - Convert.ToInt32(UserDBSnapshot.Child("StepSnapshot").Value));
-			// }
-		}
-
-		private IEnumerator SnapshotDatabase()
-		{
-			var DBTask = DatabaseManager.Instance.DatabaseReference.Child("Users").Child(DatabaseManager.Instance.Auth.CurrentUser.UserId).GetValueAsync();
-		
-			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
-		
-			if (DBTask.Exception != null)
-			{
-				Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
-			}
-			else if (DBTask.Result.Value == null)
-			{
-				//No data exists yet
-			}
-			else
-			{
-				UserDBSnapshot = DBTask.Result;
-			}
-		}
 
 		public void LoadUserData()
 		{
@@ -80,33 +53,53 @@ namespace TrainingBuddy.Users
 				}
 			});
 		}
-
-		public object LoadUserData(string field)
-		{
-			StartCoroutine(SnapshotDatabase());
-
-			var returnObject = new object();
-
-			if (UserDBSnapshot == null)
-			{
-				return returnObject;
-			}
-
-			returnObject = field switch
-			{
-				"UserName" => UserDBSnapshot.Child("UserName").Value, 
-				"SkillPoints" => UserDBSnapshot.Child("SkillPoints").Value, 
-				"AccelerationPoints" => UserDBSnapshot.Child("AccelerationPoints").Value, 
-				"SpeedPoints" => UserDBSnapshot.Child("SpeedPoints").Value, 
-				"ExperiencePoints" => UserDBSnapshot.Child("ExperiencePoints").Value, 
-				"StepSnapshot" => UserDBSnapshot.Child("StepSnapshot").Value, 
-				"LocationSnapshot" => UserDBSnapshot.Child("LocationSnapshot").Value, 
-				_ => returnObject
-			};
-
-			return returnObject;
-		}
 		
+		public void StartStepCounter()
+		{
+			if (Permission.HasUserAuthorizedPermission("android.permission.ACTIVITY_RECOGNITION"))
+			{
+				if (StepCounter.current == null)
+				{
+					InputSystem.AddDevice<StepCounter>();
+				}
+		        
+				if (!StepCounter.current.enabled)
+				{
+					InputSystem.EnableDevice(StepCounter.current);
+					if (StepCounter.current.enabled)
+					{
+						Debug.Log("StepCounter is enabled");
+					}
+				}
+			
+				if (StepCounter.current != null)
+				{
+					DatabaseManager.Instance.ReadUserData("StepSnapshot", dbTask =>
+					{
+						if (dbTask.IsCompleted)
+						{
+							var stepSnapshot = dbTask.Result;
+							if ((int)stepSnapshot.Value == -1 && StepCounter.current.stepCounter.ReadValue() > 0)
+							{
+								DatabaseManager.Instance.WriteUserData("StepSnapshot", StepCounter.current.stepCounter.ReadValue());
+							} 
+							else if (StepCounter.current.stepCounter.ReadValue() > 0 && StepCounter.current.stepCounter.ReadValue() < (int)stepSnapshot.Value)
+							{
+								DatabaseManager.Instance.WriteUserData("StepSnapshot", StepCounter.current.stepCounter.ReadValue());
+							}
+						}
+					});
+					
+					// DatabaseManager.Instance.WriteUserData("Steps", StepCounter.current.stepCounter.ReadValue() - );
+				}
+			}
+		}
+
+		// public IEnumerator StepCounterCoroutine()
+		// {
+		// 	
+		// }
+
 		public IEnumerator UpdateUsernameDatabase(string username)
 		{
 			//Set the currently logged in user username in the database
@@ -279,11 +272,11 @@ namespace TrainingBuddy.Users
 			throw new NotImplementedException();
 		}
 
-		public IEnumerator UpdateLocation()
+		public IEnumerator UpdateLocation(float timeInterval = 10f)
 		{
 			if (!Input.location.isEnabledByUser)
 			{
-				yield break;
+				yield return false;
 			}
 
 			if (Input.location.status != LocationServiceStatus.Running)
@@ -296,22 +289,11 @@ namespace TrainingBuddy.Users
 				if (Input.location.status == LocationServiceStatus.Failed)
 				{
 					print("Unable to determine device location");
-					yield break;
 				}
 
-				var DBTask = DatabaseManager.Instance.DatabaseReference.Child("Users").Child(DatabaseManager.Instance.Auth.CurrentUser.UserId).Child("Location").SetValueAsync(Input.location.lastData.latitude + " " + Input.location.lastData.longitude);
-				
-				yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
-				
-				if (DBTask.Exception != null)
-				{
-					Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
-				}
-				
-				// If the connection succeeded, this retrieves the device's current location and displays it in the Console window.
-				// print("Location: " + Input.location.lastData.latitude + " " + Input.location.lastData.longitude + " " + Input.location.lastData.altitude + " " + Input.location.lastData.horizontalAccuracy + " " + Input.location.lastData.timestamp);
+				DatabaseManager.Instance.WriteUserData("Location", Input.location.lastData.latitude + " " + Input.location.lastData.longitude);
 
-				yield return new WaitForSeconds(20f);
+				yield return new WaitForSeconds(timeInterval);
 			}
 			
 			// Waits until the location service initializes
