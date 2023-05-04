@@ -35,11 +35,11 @@ namespace TrainingBuddy.Managers
 	    private void InitializeFirebase()
 	    {
 	        Debug.Log("Setting up Firebase Auth");
-	        //Set the authentication instance object
+	        //Set the authentication Instance object
 	        Auth = FirebaseAuth.DefaultInstance;
 	        DatabaseReference = FirebaseDatabase.GetInstance("https://trainingbuddy-81bca-default-rtdb.europe-west1.firebasedatabase.app/").RootReference;
 	    }
-	    
+
 	    public void ReadUserData(Action<Task<DataSnapshot>> callback)
 	    {
 		    StartCoroutine(ReadUserDataCoroutine("", callback));
@@ -53,6 +53,20 @@ namespace TrainingBuddy.Managers
 		private IEnumerator ReadUserDataCoroutine(string path, Action<Task<DataSnapshot>> callback)
 		{
 			Task<DataSnapshot> DBTask = path == "" ? DatabaseReference.Child("Users").Child(Auth.CurrentUser.UserId).GetValueAsync() : DatabaseReference.Child("Users").Child(Auth.CurrentUser.UserId).Child(path).GetValueAsync();
+			
+			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
+			
+			callback(DBTask);
+		}
+
+		public void GetAllUsers(Action<Task<DataSnapshot>> callback)
+		{
+			StartCoroutine(GetAllUsersCoroutine(callback));
+		}
+		
+		private IEnumerator GetAllUsersCoroutine(Action<Task<DataSnapshot>> callback)
+		{
+			Task<DataSnapshot> DBTask = DatabaseReference.Child("Users").GetValueAsync();
 			
 			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
 			
@@ -120,14 +134,31 @@ namespace TrainingBuddy.Managers
 		    }
 		    else
 		    {
-			    UIManager.instance.ProfileScreen();
+			    UIManager.Instance.ProfileScreen();
 		    }
 	    }
 	    
 	    public void SignOut()
 	    {
 		    Auth.SignOut();
-		    UIManager.instance.LoginScreen();
+		    UIManager.Instance.LoginScreen();
+	    }
+
+	    public void NearbyUsers()
+	    {
+		    GetAllUsers(dbTask =>
+		    {
+			    if (dbTask.IsCompleted)
+			    {
+				    // var test = UtilityMethods.FindUsersInRange(dbTask.Result, 1000);
+				    
+				    // foreach (var user in dbTask.Result.Children)
+				    // {
+					   //  Debug.Log("Latitude: " + user.Child("Latitude"));
+					   //  Debug.Log("Longitude: " + user.Child("Longitude"));
+				    // }
+			    }
+		    });
 	    }
 	}
 }

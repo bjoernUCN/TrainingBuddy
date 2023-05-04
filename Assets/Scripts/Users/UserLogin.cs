@@ -1,11 +1,6 @@
-using System;
-using System.Collections;
-using Firebase;
-using Firebase.Auth;
 using TMPro;
 using TrainingBuddy.Managers;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace TrainingBuddy.Users
 {

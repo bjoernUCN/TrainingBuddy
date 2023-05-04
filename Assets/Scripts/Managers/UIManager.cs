@@ -1,42 +1,28 @@
-using System;
 using UnityEngine;
-using UnityEngine.Android;
-using UnityEngine.InputSystem;
 
 namespace TrainingBuddy.Managers
 {
 	public class UIManager : Singleton<UIManager>
 	{
-		public static UIManager instance;
-
 		[SerializeField] private GameObject tutorialUI_01;
 		[SerializeField] private GameObject tutorialUI_02;
 		[SerializeField] private GameObject tutorialUI_03;
+		[SerializeField] private GameObject homeUI;
 		[SerializeField] private GameObject loginUI;
 		[SerializeField] private GameObject registerUI;
 		[SerializeField] private GameObject profileUI;
-
-		private new void Awake()
-		{
-			if (instance == null)
-			{
-				instance = this;
-			}
-			else if (instance != null)
-			{
-				Debug.Log("Instance already exists, destroying object!");
-				Destroy(this);
-			}
-		}
+		[SerializeField] private GameObject raceUI;
 
 		private void ClearScreen()
 		{
+			homeUI.SetActive(false);
 			loginUI.SetActive(false);
 			registerUI.SetActive(false);
 			profileUI.SetActive(false);
 			tutorialUI_01.SetActive(false);
 			tutorialUI_02.SetActive(false);
 			tutorialUI_03.SetActive(false);
+			raceUI.SetActive(false);
 		}
 
 		public void TutorialScreen01()
@@ -68,31 +54,39 @@ namespace TrainingBuddy.Managers
 			registerUI.SetActive(true);
 		}
 
-		public void ProfileScreen()
+		public void HomeScreen()
 		{
 			ClearScreen();
-			profileUI.SetActive(true);
+			homeUI.SetActive(true);
+			
 			if (DatabaseManager.Instance.Auth.CurrentUser == null)
 			{
 				LoginScreen();
 				return;
 			}
+			
+			//TODO - Fix this
+			// GameManager.Instance.UserData.StartStepCounter();
+			// GameManager.Instance.UserData.StartLocationUpdater();
+		}
 
-			if (GameManager.Instance.UserData.LocationUpdater != null)
-			{
-				StopCoroutine(GameManager.Instance.UserData.LocationUpdater);
-				GameManager.Instance.UserData.LocationUpdater = null;
-			}
-			GameManager.Instance.UserData.LocationUpdater = StartCoroutine(GameManager.Instance.UserData.UpdateLocation());
+		public void RaceScreen()
+		{
+			ClearScreen();
+			raceUI.SetActive(true);
+		}
+		
+		public void ProfileScreen()
+		{
+			ClearScreen();
+			profileUI.SetActive(true);
 
 			GameManager.Instance.UserData.LoadUserData();
 		}
-	}
-
-	public enum UIScreen
-	{
-		RegisterScreen,
-		LoginScreen,
-		ProfileScreen,
+		
+		public void HighscoreScreen()
+		{
+			
+		}
 	}
 }

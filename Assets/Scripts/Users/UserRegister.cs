@@ -4,7 +4,6 @@ using Firebase.Auth;
 using TMPro;
 using TrainingBuddy.Managers;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace TrainingBuddy.Users
 {
@@ -94,7 +93,6 @@ namespace TrainingBuddy.Users
 	                    }
 	                    else
 	                    {
-		                    Debug.Log("HUH?");
 	                        //Username is now set
 	                        //Now return to login screen
 	                        
@@ -104,29 +102,12 @@ namespace TrainingBuddy.Users
 	                        DatabaseManager.Instance.WriteUserData("SpeedPoints", 0);
 	                        DatabaseManager.Instance.WriteUserData("ExperiencePoints", 0);
 	                        DatabaseManager.Instance.WriteUserData("Level", 1);
-	                        // DatabaseManager.Instance.WriteUserData("Level", 1);
+	                        DatabaseManager.Instance.WriteUserData("Longitude", -1);
+	                        DatabaseManager.Instance.WriteUserData("Latitude", -1);
+	                        DatabaseManager.Instance.WriteUserData("StepSnapshot", -1);
+	                        DatabaseManager.Instance.WriteUserData("StepCount", -1);
 	                        
-	                        if (StepCounter.current == null)
-	                        {
-		                        InputSystem.AddDevice<StepCounter>();
-	                        }
-		        
-	                        if (!StepCounter.current.enabled)
-	                        {
-		                        InputSystem.EnableDevice(StepCounter.current);
-		                        if (StepCounter.current.enabled)
-		                        {
-			                        Debug.Log("StepCounter is enabled");
-		                        }
-	                        }
-	                        
-		                    StartCoroutine(GameManager.Instance.UserData.UpdateStepSnapshot(-1));
-
-		                    GameManager.Instance.UserData.LocationUpdater = StartCoroutine(GameManager.Instance.UserData.UpdateLocation());
-	                        UIManager.instance.LoginScreen();                        
-	                        // warningRegisterText.text = "";
-	                        // ClearRegisterFields();
-	                        // ClearLoginFields();
+	                        UIManager.Instance.LoginScreen();
 	                    }
 	                }
 	            }

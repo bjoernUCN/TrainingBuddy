@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Navigation
+namespace TrainingBuddy.Navigation
 {
 	[CreateAssetMenu(menuName = "TrainingBuddy/Scene Reference", fileName = "SceneReference")]
 	public class SceneReference : ScriptableObject, ISerializationCallbackReceiver
