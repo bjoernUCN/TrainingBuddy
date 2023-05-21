@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using TrainingBuddy.Races;
 using TrainingBuddy.Users;
 using UnityEngine;
@@ -9,8 +11,8 @@ namespace TrainingBuddy.Managers
 	{
 		[field:SerializeField] public UserData UserData { get; private set; }
 		[field:SerializeField] public RaceData RaceData { get; private set; }
-		
-		private new void Awake()
+
+		private void Update()
 		{
 			if (!Permission.HasUserAuthorizedPermission("android.permission.ACTIVITY_RECOGNITION"))
 			{

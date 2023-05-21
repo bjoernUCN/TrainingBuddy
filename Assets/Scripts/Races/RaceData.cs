@@ -7,17 +7,13 @@ namespace TrainingBuddy.Races
 	{
 		public void HostRace()
 		{
-			DatabaseManager.Instance.CreateLobby();
+			DatabaseManager.Instance.HostLobby();
 		}
 		
 		public void JoinRace(string lobbyId)
 		{
 			DatabaseManager.Instance.JoinLobby(lobbyId);
-		}
-		
-		public void FindNearbyRaces()
-		{
-			DatabaseManager.Instance.FindNearbyLobbies();
+			RaceManager.Instance.LobbyScreen(lobbyId);
 		}
 	}
 }

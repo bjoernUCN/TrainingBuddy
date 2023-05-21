@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
 using Firebase.Database;
 using TMPro;
 using TrainingBuddy.Managers;
@@ -21,10 +22,7 @@ namespace TrainingBuddy.Users
 		[field:SerializeField] public TMP_Text ExperiencePoints { get; set; }
 		[field:SerializeField] public Image ExpBarFill { get; set; }
 
-		public Coroutine LocationUpdater;
 		private bool isLocationUpdaterRunning;
-		
-		private Coroutine stepCounterRoutine;
 		private bool isStepCounterRunning;
 		private int localStepCount;
 		
@@ -38,31 +36,22 @@ namespace TrainingBuddy.Users
 			}
 		}
 
-		public void LoadUserData()
+		public async void LoadUserData()
 		{
-			DatabaseManager.Instance.ReadUserData(dbTask =>
-			{
-				if (dbTask.IsFaulted)
-				{
-					Debug.LogError("Error reading user data: " + dbTask.Exception);
-				}
-				else if (dbTask.IsCompleted)
-				{
-					DataSnapshot dataSnapshot = dbTask.Result;
-					Username.text = dataSnapshot.Child("UserName").Value.ToString();
-					SkillPoints.text = "Skill Points: " + dataSnapshot.Child("SkillPoints").Value;
-					AccelerationPoints.text = dataSnapshot.Child("AccelerationPoints").Value.ToString();
-					SpeedPoints.text = dataSnapshot.Child("SpeedPoints").Value.ToString();
+			var data = await DatabaseManager.Instance.ReadCurrentUserData();
+			
+			Username.text = data.Child("UserName").Value.ToString();
+			SkillPoints.text = "Skill Points: " + data.Child("SkillPoints").Value;
+			AccelerationPoints.text = data.Child("AccelerationPoints").Value.ToString();
+			SpeedPoints.text = data.Child("SpeedPoints").Value.ToString();
 
-					var expInt = Convert.ToInt32(dataSnapshot.Child("ExperiencePoints").Value);
-					int userLevel = Mathf.CeilToInt(expInt / expIncrease);
-					float maxExp = userLevel * expIncrease;
+			var expInt = Convert.ToInt32(data.Child("ExperiencePoints").Value);
+			int userLevel = Mathf.CeilToInt(expInt / expIncrease);
+			float maxExp = userLevel * expIncrease;
 		        
-					Level.text = "Level: " + userLevel;
-					ExperiencePoints.text = dataSnapshot.Child("ExperiencePoints").Value + "/"+ maxExp +" XP";
-					ExpBarFill.fillAmount = expInt / maxExp;
-				}
-			});
+			Level.text = "Level: " + userLevel;
+			ExperiencePoints.text = data.Child("ExperiencePoints").Value + "/"+ maxExp +" XP";
+			ExpBarFill.fillAmount = expInt / maxExp;
 		}
 		
 		public void StartStepCounter()
@@ -90,39 +79,33 @@ namespace TrainingBuddy.Users
 			
 				if (StepCounter.current != null)
 				{
+					StepCounterHandler();
 					isStepCounterRunning = true;
-					
-					stepCounterRoutine = StartCoroutine(StepCounterCoroutine());
 				}
 			}
 		}
 
-		private IEnumerator StepCounterCoroutine(float delay = 10f)
+		private async Task StepCounterHandler(float delay = 10f)
 		{
 			while (true)
 			{
-				DatabaseManager.Instance.ReadUserData("StepSnapshot", dbTask =>
-				{
-					if (dbTask.IsCompleted)
-					{
-						var result = dbTask.Result;
-						var stepSnapshot = (long)result.Value;
-						
-						if (stepSnapshot == -1 && localStepCount > 0)
-						{
-							DatabaseManager.Instance.WriteUserData("StepSnapshot", localStepCount);
-						} 
-						else if (localStepCount > 0 && localStepCount < stepSnapshot)
-						{
-							DatabaseManager.Instance.WriteUserData("StepSnapshot", localStepCount);
-						}
-						
-						DatabaseManager.Instance.WriteUserData("StepCount", localStepCount - stepSnapshot);
-						StepTest.text = "StepCount: " + (localStepCount - stepSnapshot);
-					}
-				});
+				var data = await DatabaseManager.Instance.ReadCurrentUserData("StepSnapshot");
+				
+				var stepSnapshot = (long)data.Value; 
 
-				yield return new WaitForSeconds(delay);
+				if (stepSnapshot == -1 && localStepCount > 0)
+				{
+					await DatabaseManager.Instance.WriteCurrentUserData("StepSnapshot", localStepCount);
+				} 
+				else if (localStepCount > 0 && localStepCount < stepSnapshot)
+				{
+					await DatabaseManager.Instance.WriteCurrentUserData("StepSnapshot", localStepCount);
+				}
+				
+				await DatabaseManager.Instance.WriteCurrentUserData("StepCount", localStepCount - stepSnapshot);
+				StepTest.text = "StepCount: " + (localStepCount - stepSnapshot);
+				
+				await Task.Delay((int)delay * 1000);
 			}
 		}
 		
@@ -145,11 +128,12 @@ namespace TrainingBuddy.Users
 					Input.location.Start();
 				}
 				
-				LocationUpdater = StartCoroutine(UpdateLocationCoroutine());
+				LocationHandler();
+				isLocationUpdaterRunning = true;
 			}
 		}
 
-		private IEnumerator UpdateLocationCoroutine(float delay = 10f)
+		private async Task LocationHandler(float delay = 10f)
 		{
 			while (true)
 			{
@@ -158,10 +142,10 @@ namespace TrainingBuddy.Users
 					print("Unable to determine device location");
 				}
 
-				DatabaseManager.Instance.WriteUserData("Latitude", Input.location.lastData.latitude);
-				DatabaseManager.Instance.WriteUserData("Longitude", Input.location.lastData.longitude);
+				await DatabaseManager.Instance.WriteCurrentUserData("Latitude", Input.location.lastData.latitude);
+				await DatabaseManager.Instance.WriteCurrentUserData("Longitude", Input.location.lastData.longitude);
 
-				yield return new WaitForSeconds(delay);
+				await Task.Delay((int)delay * 1000);
 			}
 		}
 	}

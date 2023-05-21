@@ -96,16 +96,17 @@ namespace TrainingBuddy.Users
 	                        //Username is now set
 	                        //Now return to login screen
 	                        
-	                        DatabaseManager.Instance.WriteUserData("UserName", username);
-	                        DatabaseManager.Instance.WriteUserData("SkillPoints", 0);
-	                        DatabaseManager.Instance.WriteUserData("AccelerationPoints", 0);
-	                        DatabaseManager.Instance.WriteUserData("SpeedPoints", 0);
-	                        DatabaseManager.Instance.WriteUserData("ExperiencePoints", 0);
-	                        DatabaseManager.Instance.WriteUserData("Level", 1);
-	                        DatabaseManager.Instance.WriteUserData("Longitude", -1);
-	                        DatabaseManager.Instance.WriteUserData("Latitude", -1);
-	                        DatabaseManager.Instance.WriteUserData("StepSnapshot", -1);
-	                        DatabaseManager.Instance.WriteUserData("StepCount", -1);
+	                        DatabaseManager.Instance.WriteCurrentUserData("UserName", username);
+	                        DatabaseManager.Instance.WriteCurrentUserData("SkillPoints", 0);
+	                        DatabaseManager.Instance.WriteCurrentUserData("AccelerationPoints", 0);
+	                        DatabaseManager.Instance.WriteCurrentUserData("SpeedPoints", 0);
+	                        DatabaseManager.Instance.WriteCurrentUserData("ExperiencePoints", 0);
+	                        DatabaseManager.Instance.WriteCurrentUserData("Level", 1);
+	                        DatabaseManager.Instance.WriteCurrentUserData("Longitude", -1);
+	                        DatabaseManager.Instance.WriteCurrentUserData("Latitude", -1);
+	                        DatabaseManager.Instance.WriteCurrentUserData("StepSnapshot", -1);
+	                        DatabaseManager.Instance.WriteCurrentUserData("StepCount", -1);
+	                        DatabaseManager.Instance.WriteCurrentUserData("Lobby", "");
 	                        
 	                        UIManager.Instance.LoginScreen();
 	                    }

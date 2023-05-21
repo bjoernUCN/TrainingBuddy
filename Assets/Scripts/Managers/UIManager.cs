@@ -66,8 +66,8 @@ namespace TrainingBuddy.Managers
 			}
 			
 			//TODO - Fix this
-			// GameManager.Instance.UserData.StartStepCounter();
-			// GameManager.Instance.UserData.StartLocationUpdater();
+			GameManager.Instance.UserData.StartStepCounter();
+			GameManager.Instance.UserData.StartLocationUpdater();
 		}
 
 		public void RaceScreen()

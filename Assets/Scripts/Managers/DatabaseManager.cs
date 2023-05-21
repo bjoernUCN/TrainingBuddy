@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Database;
+using TrainingBuddy.Utility;
 using UnityEngine;
 
 namespace TrainingBuddy.Managers
@@ -90,231 +91,248 @@ namespace TrainingBuddy.Managers
 		    UIManager.Instance.LoginScreen();
 	    }
 	    
-	    public void ReadUserData(Action<Task<DataSnapshot>> callback)
-	    {
-		    StartCoroutine(ReadUserDataCoroutine("", callback));
-	    }
-	    
-	    public void ReadUserData(string path, Action<Task<DataSnapshot>> callback)
-	    {
-		    StartCoroutine(ReadUserDataCoroutine(path, callback));
-	    }
-	    
-		private IEnumerator ReadUserDataCoroutine(string path, Action<Task<DataSnapshot>> callback)
+		public async Task<DataSnapshot> ReadCurrentUserData(string path = null)
 		{
-			Task<DataSnapshot> DBTask = path == "" ? DatabaseReference.Child("Users").Child(Auth.CurrentUser.UserId).GetValueAsync() : DatabaseReference.Child("Users").Child(Auth.CurrentUser.UserId).Child(path).GetValueAsync();
-			
-			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
-			
-			callback(DBTask);
-		}
+			Task<DataSnapshot> DBTask = path == null ? DatabaseReference.Child("Users").Child(Auth.CurrentUser.UserId).GetValueAsync() : DatabaseReference.Child("Users").Child(Auth.CurrentUser.UserId).Child(path).GetValueAsync();
 
-		public void GetAllUsers(Action<Task<DataSnapshot>> callback)
-		{
-			StartCoroutine(GetAllUsersCoroutine(callback));
+			return await DBTask;
 		}
 		
-		private IEnumerator GetAllUsersCoroutine(Action<Task<DataSnapshot>> callback)
+		public async Task<DataSnapshot> ReadSpecificUserData(string userId)
+		{
+			Task<DataSnapshot> DBTask = DatabaseReference.Child("Users").Child(userId).GetValueAsync();
+
+			return await DBTask;
+		}
+		
+		private async Task<DataSnapshot> GetAllUsers()
 		{
 			Task<DataSnapshot> DBTask = DatabaseReference.Child("Users").GetValueAsync();
 			
-			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
-			
-			callback(DBTask);
+			return await DBTask;
 		}
 		
-		public void WriteUserData(string path, object data)
+		public async Task<DataSnapshot> GetLobbyData(string lobbyId)
 		{
-			if (path == "")
-			{
-				return;
-			}
+			Task<DataSnapshot> DBTask = DatabaseReference.Child("Races").Child(lobbyId).GetValueAsync();
 			
-			StartCoroutine(WriteUserDataCoroutine(path, data));
+			return await DBTask;
 		}
 		
-		private IEnumerator WriteUserDataCoroutine(string path, object data)
+		public async Task<bool> WriteCurrentUserData(string path, object data)
 		{
 			Task DBTask = DatabaseReference.Child("Users").Child(Auth.CurrentUser.UserId).Child(path).SetValueAsync(data);
 
-			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
+			await DBTask;
 
 			if (DBTask.Exception != null)
 			{
 				Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
-				yield return null;
+				return false;
 			}
 
-			yield return true;
+			return true;
 		}
 		
-		public void NearbyUsers()
+		public async Task<bool> WriteSpecificUserData(string userId, string path, object data)
 		{
-			GetAllUsers(dbTask =>
+			Task DBTask = DatabaseReference.Child("Users").Child(userId).Child(path).SetValueAsync(data);
+
+			await DBTask;
+
+			if (DBTask.Exception != null)
 			{
-				if (dbTask.IsCompleted)
-				{
-					// var test = UtilityMethods.FindUsersInRange(dbTask.Result, 1000);
-				    
-					// foreach (var user in dbTask.Result.Children)
-					// {
-					//  Debug.Log("Latitude: " + user.Child("Latitude"));
-					//  Debug.Log("Longitude: " + user.Child("Longitude"));
-					// }
-				}
-			});
+				Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
+				return false;
+			}
+
+			return true;
+		}
+		
+		public async Task<List<string>> NearbyUsers(int range)
+		{
+			if (!Input.location.isEnabledByUser)
+			{
+				return null;
+			}
+
+			if (Input.location.status != LocationServiceStatus.Running)
+			{
+				Input.location.Start();
+			}
+			
+			var userData = await GetAllUsers();
+			
+			return UtilityMethods.FindUsersInRange(userData, Input.location.lastData.latitude, Input.location.lastData.longitude, range);
 		}
 		
 		// Races
-		public void WriteRaceData(string key, object data, string subPath = null)
+		private async Task<bool> JoinOwnRace(string key, object data, string subPath)
 		{
-			if (key == "")
-			{
-				return;
-			}
+			Task DBTask = DatabaseReference.Child("Races").Child(Auth.CurrentUser.UserId).Child(key).Child(subPath).SetValueAsync(data);
 
-			StartCoroutine(subPath == null ? WriteUserDataCoroutine(subPath, data) : WriteRaceDataCoroutine(key, data, subPath));
-		}
-		
-		private IEnumerator WriteRaceDataCoroutine(string key, object data, string subPath = null, string lobbyId = null)
-		{
-			Task DBTask;
-			
-			if (lobbyId != null)
-			{
-				DBTask = subPath == null ? DatabaseReference.Child("Races").Child(lobbyId).Child(key).SetValueAsync(data) : DatabaseReference.Child("Races").Child(lobbyId).Child(key).Child(subPath).SetValueAsync(data);
-			}
-			else
-			{
-				DBTask = subPath == null ? DatabaseReference.Child("Races").Child(Auth.CurrentUser.UserId).Child(key).SetValueAsync(data) : DatabaseReference.Child("Races").Child(Auth.CurrentUser.UserId).Child(key).Child(subPath).SetValueAsync(data);
-			}
-			
-
-			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
+			await DBTask;
 
 			if (DBTask.Exception != null)
 			{
 				Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
-				yield return null;
+				return false;
 			}
 
-			yield return true;
+			return true;
 		}
 		
-		public void CreateLobby()
+		private async Task<bool> JoinRace(string key, object data, string subPath, string lobbyId)
 		{
-			GetAllRaces(dbTask =>
+			Task DBTask = subPath == null ? DatabaseReference.Child("Races").Child(lobbyId).Child(key).SetValueAsync(data) : DatabaseReference.Child("Races").Child(lobbyId).Child(key).Child(subPath).SetValueAsync(data);
+			
+			await DBTask;
+		
+			if (DBTask.Exception != null)
 			{
-				if (dbTask.IsCompleted)
-				{
-					foreach (var race in dbTask.Result.Children)
-					{
-						if (race.Key == Auth.CurrentUser.UserId)
-						{
-							Debug.Log("ALREADY GOT A ROOM!!!");
-							//TODO: Enter Room
-							return;
-						}
-					}
-					StartCoroutine(CreateLobbyCoroutine());
-					WriteRaceData(Auth.CurrentUser.UserId, "Host", "Role");
-					WriteRaceData(Auth.CurrentUser.UserId, 0, "Status");
-					WriteUserData("Lobby", Auth.CurrentUser.UserId);
-				}
-			});
+				Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
+				return false;
+			}
+		
+			return true;
 		}
 		
-		private IEnumerator CreateLobbyCoroutine()
+		public async Task<bool> KickFromRace(string lobbyId, string playerId)
+		{
+			Task DBTask = DatabaseReference.Child("Races").Child(lobbyId).Child(playerId).RemoveValueAsync();
+			
+			await DBTask;
+		
+			if (DBTask.Exception != null)
+			{
+				Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
+				return false;
+			}
+
+			await WriteSpecificUserData(playerId, "Lobby", "");
+		
+			return true;
+		}
+		
+		public async Task<bool> DestroyRace(string lobbyId)
+		{
+			Task DBTask = DatabaseReference.Child("Races").Child(lobbyId).RemoveValueAsync();
+			
+			await DBTask;
+		
+			if (DBTask.Exception != null)
+			{
+				Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
+				return false;
+			}
+		
+			return true;
+		}
+
+		public async Task<string> IsInLobby()
+		{
+			var data = await GetAllRaces();
+			
+			foreach (var race in data.Children)
+			{
+				if (race.Key == Auth.CurrentUser.UserId)
+				{
+					return race.Key;
+				}
+
+				foreach (var raceData in race.Children)
+				{
+					if (raceData.Key == Auth.CurrentUser.UserId)
+					{
+						return raceData.Key;
+					}
+				}
+			}
+			
+			return null;
+		}
+
+		public async Task<bool> HostLobby()
+		{
+			var data = await GetAllRaces();
+			
+			foreach (var race in data.Children)
+			{
+				if (race.Key == Auth.CurrentUser.UserId)
+				{
+					Debug.Log("ALREADY GOT A ROOM!!!");
+					//TODO: Enter Room
+					return false;
+				}
+			}
+			await CreateLobby();
+			await JoinOwnRace(Auth.CurrentUser.UserId, "Host", "Role");
+			await JoinOwnRace(Auth.CurrentUser.UserId, 0, "Status");
+			await WriteCurrentUserData("Lobby", Auth.CurrentUser.UserId);
+			return true;
+		}
+		
+		private async Task<bool> CreateLobby()
 		{
 			Task DBTask = DatabaseReference.Child("Races").Child(Auth.CurrentUser.UserId).Child("Timestamp").SetValueAsync(DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
 
-			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
+			await DBTask;
 
 			if (DBTask.Exception != null)
 			{
 				Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
-				yield return null;
+				return false;
 			}
 
-			yield return true;
+			return true;
 		}
 		
-		public void JoinLobby(string lobby)
+		public async void JoinLobby(string lobby)
 		{
-			GetAllRaces(dbTask =>
+			var data = await GetAllRaces();
+			
+			foreach (var race in data.Children)
 			{
-				if (dbTask.IsCompleted)
+				if (race.Key == lobby)
 				{
-					foreach (var race in dbTask.Result.Children)
+					if (race.Children.Any(player => player.Key == Auth.CurrentUser.UserId))
 					{
-						if (race.Key == lobby)
-						{
-							if (race.Children.Any(player => player.Key == Auth.CurrentUser.UserId))
-							{
-								Debug.Log("ALREADY IN THE ROOM!!!");
-								return;
-							}
-							StartCoroutine(WriteRaceDataCoroutine(Auth.CurrentUser.UserId, "Client", "Role", race.Key));
-							StartCoroutine(WriteRaceDataCoroutine(Auth.CurrentUser.UserId, 0, "Status", race.Key));
-							return;
-						}
+						Debug.Log("ALREADY IN THE ROOM!!!");
+						return;
 					}
+					await JoinRace(Auth.CurrentUser.UserId, "Client", "Role", race.Key);
+					await JoinRace(Auth.CurrentUser.UserId, 0, "Status", race.Key);
+					await WriteCurrentUserData("Lobby", race.Key);
+					return;
 				}
-			});
+			}
 		}
 
-		public void FindNearbyLobbies()
+		public async Task<List<string>> FindNearbyLobbies()
 		{
-			List<string> _lobbies = new List<string>();
-			GetAllRaces(dbTask =>
+			var nearbyLobbies = new List<string>();
+			var userList = await NearbyUsers(10);
+			var raceList = await GetAllRaces();
+			
+			foreach (DataSnapshot raceListChild in raceList.Children)
 			{
-				if (dbTask.IsCompleted)
+				foreach (string user in userList)
 				{
-					foreach (var race in dbTask.Result.Children)
+					if (raceListChild.Key == user)
 					{
-						_lobbies.Add(race.Key);
+						nearbyLobbies.Add(raceListChild.Key);
 					}
-
-					if (_lobbies.Count > 0)
-					{
-						GetAllUsers(task =>
-						{
-							if (task.IsCompleted)
-							{
-								foreach (var user in task.Result.Children)
-								{
-									if (_lobbies.Exists(user.Key.Contains))
-									{
-										// Debug.Log("Yooooooo");
-										ReadUserData("Longitude", uTask =>
-										{
-											if (uTask.IsCompleted)
-											{
-												
-											}
-										});
-									}
-								}
-							}
-						});
-					}
-					
 				}
-			});
+			}
+
+			return nearbyLobbies;
 		}
 		
-		public void GetAllRaces(Action<Task<DataSnapshot>> callback)
-		{
-			StartCoroutine(GetAllRacesCoroutine(callback));
-		}
-		
-		private IEnumerator GetAllRacesCoroutine(Action<Task<DataSnapshot>> callback)
+		private async Task<DataSnapshot> GetAllRaces()
 		{
 			Task<DataSnapshot> DBTask = DatabaseReference.Child("Races").GetValueAsync();
-			
-			yield return new WaitUntil(predicate: () => DBTask.IsCompleted);
-			
-			callback(DBTask);
+
+			return await DBTask;
 		}
 	}
 }

@@ -1,9 +1,9 @@
 {
     "m_SelectedDeviceId": "a965c9be",
     "m_SelectedPackage": {
-        "deviceId": "",
-        "name": "",
-        "processId": 0,
+        "deviceId": "a965c9be",
+        "name": "com.TrainingBuddyInc.TrainingBuddy",
+        "processId": 29202,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -17,26 +17,32 @@
         {
             "deviceId": "a965c9be",
             "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 9957,
+            "processId": 24002,
             "exited": true
         },
         {
             "deviceId": "a965c9be",
             "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 12125,
+            "processId": 25030,
             "exited": true
         },
         {
             "deviceId": "a965c9be",
             "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 15285,
+            "processId": 27192,
             "exited": true
         },
         {
             "deviceId": "a965c9be",
             "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 19912,
+            "processId": 24025,
             "exited": true
+        },
+        {
+            "deviceId": "a965c9be",
+            "name": "com.TrainingBuddyInc.TrainingBuddy",
+            "processId": 29202,
+            "exited": false
         }
     ],
     "m_Tags": {
