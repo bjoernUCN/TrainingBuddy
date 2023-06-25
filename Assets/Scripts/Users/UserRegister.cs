@@ -97,7 +97,7 @@ namespace TrainingBuddy.Users
 	                        //Now return to login screen
 	                        
 	                        DatabaseManager.Instance.WriteCurrentUserData("UserName", username);
-	                        DatabaseManager.Instance.WriteCurrentUserData("SkillPoints", 0);
+	                        DatabaseManager.Instance.WriteCurrentUserData("SkillPoints", 5);
 	                        DatabaseManager.Instance.WriteCurrentUserData("AccelerationPoints", 0);
 	                        DatabaseManager.Instance.WriteCurrentUserData("SpeedPoints", 0);
 	                        DatabaseManager.Instance.WriteCurrentUserData("ExperiencePoints", 0);

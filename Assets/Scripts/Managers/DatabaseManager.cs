@@ -334,5 +334,45 @@ namespace TrainingBuddy.Managers
 
 			return await DBTask;
 		}
+		
+		public async void Train()
+		{
+			await InvestInTraining();
+		}
+		private async Task<bool> InvestInTraining()
+		{
+			DataSnapshot data = await ReadCurrentUserData();
+			var steps = (long)data.Child("StepCount").Value;
+			var experience = Convert.ToInt32(data.Child("ExperiencePoints").Value);
+			var spdPoints = (long)data.Child("SpeedPoints").Value;
+			var accPoints = (long)data.Child("AccelerationPoints").Value;
+
+			float investCap = GameManager.Instance.UserData.InvestCap;
+			if (steps < investCap)
+			{
+				UIManager.Instance.ProfileScreen();
+				GameManager.Instance.UserData.UpdateStepCount();
+				return false;
+			}
+
+			float expIncrease = GameManager.Instance.UserData.ExpIncrease;
+			int userLevel = Mathf.FloorToInt((1 + Mathf.Sqrt(1 + 8 * (experience + investCap) / expIncrease)) / 2);
+
+			await WriteCurrentUserData("Level", userLevel);
+			await WriteCurrentUserData("StepCount", steps - investCap);
+			await WriteCurrentUserData("ExperiencePoints", experience + investCap);
+			
+			float skillPointsPerLevel = GameManager.Instance.UserData.SkillPointsPerLevel;
+			var totalPoints = userLevel * skillPointsPerLevel;
+			totalPoints -= (int)spdPoints;
+			totalPoints -= (int)accPoints;
+			
+			await WriteCurrentUserData("SkillPoints", totalPoints);
+			
+			UIManager.Instance.ProfileScreen();
+			GameManager.Instance.UserData.UpdateStepCount();
+
+			return true;
+		}
 	}
 }

@@ -13,7 +13,9 @@ namespace TrainingBuddy.Users
 {
 	public class UserData : MonoBehaviour
 	{
-		[SerializeField] private float expIncrease = 500f;
+		[field:SerializeField] public int ExpIncrease { get; private set; }
+		[field:SerializeField] public int SkillPointsPerLevel { get; private set; }
+		[field:SerializeField] public int InvestCap { get; private set; }
 		[field:SerializeField] public TMP_Text Username { get; set; }
 		[field:SerializeField] public TMP_Text SkillPoints { get; set; }
 		[field:SerializeField] public TMP_Text AccelerationPoints { get; set; }
@@ -46,12 +48,15 @@ namespace TrainingBuddy.Users
 			SpeedPoints.text = data.Child("SpeedPoints").Value.ToString();
 
 			var expInt = Convert.ToInt32(data.Child("ExperiencePoints").Value);
-			int userLevel = Mathf.CeilToInt(expInt / expIncrease);
-			float maxExp = userLevel * expIncrease;
+			var userLevel = Convert.ToInt32(data.Child("Level").Value);
+			
+			int expNeededToCurrentLevel = (userLevel - 1) * 10000 * userLevel / 2;
+			int expNeededToNextLevel = userLevel * 10000 * (userLevel + 1) / 2;
+			int maxExp = expNeededToNextLevel - expNeededToCurrentLevel;
 		        
 			Level.text = "Level: " + userLevel;
-			ExperiencePoints.text = data.Child("ExperiencePoints").Value + "/"+ maxExp +" XP";
-			ExpBarFill.fillAmount = expInt / maxExp;
+			ExperiencePoints.text = (expInt - expNeededToCurrentLevel) + "/"+ maxExp +" XP";
+			ExpBarFill.fillAmount = (expInt - expNeededToCurrentLevel) / (float) maxExp;
 		}
 		
 		public void StartStepCounter()
@@ -89,24 +94,34 @@ namespace TrainingBuddy.Users
 		{
 			while (true)
 			{
-				var data = await DatabaseManager.Instance.ReadCurrentUserData("StepSnapshot");
-				
-				var stepSnapshot = (long)data.Value; 
-
-				if (stepSnapshot == -1 && localStepCount > 0)
+				if (localStepCount <= 0)
 				{
-					await DatabaseManager.Instance.WriteCurrentUserData("StepSnapshot", localStepCount);
-				} 
-				else if (localStepCount > 0 && localStepCount < stepSnapshot)
-				{
-					await DatabaseManager.Instance.WriteCurrentUserData("StepSnapshot", localStepCount);
+					await Task.Delay(1000);
+					continue;
 				}
-				
-				await DatabaseManager.Instance.WriteCurrentUserData("StepCount", localStepCount - stepSnapshot);
-				StepTest.text = "StepCount: " + (localStepCount - stepSnapshot);
-				
+
+				UpdateStepCount();
+					
 				await Task.Delay((int)delay * 1000);
 			}
+		}
+
+		public async void UpdateStepCount()
+		{
+			DataSnapshot data = await DatabaseManager.Instance.ReadCurrentUserData();
+			var stepSnapshot = (long)data.Child("StepSnapshot").Value; 
+			var savedStepCount = (long)data.Child("StepCount").Value; 
+
+
+			if (localStepCount >= stepSnapshot)
+			{
+				long newStepCount = savedStepCount + (localStepCount - stepSnapshot);
+					
+				await DatabaseManager.Instance.WriteCurrentUserData("StepCount", newStepCount);
+				StepTest.text = "StepCount: " + newStepCount;
+			}
+				
+			await DatabaseManager.Instance.WriteCurrentUserData("StepSnapshot", localStepCount);
 		}
 		
 		public void StartLocationUpdater()
