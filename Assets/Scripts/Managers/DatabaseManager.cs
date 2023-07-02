@@ -335,11 +335,7 @@ namespace TrainingBuddy.Managers
 			return await DBTask;
 		}
 		
-		public async void Train()
-		{
-			await InvestInTraining();
-		}
-		private async Task<bool> InvestInTraining()
+		public async void InvestInTraining()
 		{
 			DataSnapshot data = await ReadCurrentUserData();
 			var steps = (long)data.Child("StepCount").Value;
@@ -352,7 +348,7 @@ namespace TrainingBuddy.Managers
 			{
 				UIManager.Instance.ProfileScreen();
 				GameManager.Instance.UserData.UpdateStepCount();
-				return false;
+				return;
 			}
 
 			float expIncrease = GameManager.Instance.UserData.ExpIncrease;
@@ -371,8 +367,74 @@ namespace TrainingBuddy.Managers
 			
 			UIManager.Instance.ProfileScreen();
 			GameManager.Instance.UserData.UpdateStepCount();
-
-			return true;
+		}
+		
+		public async void IncreaseAccPoints()
+		{
+			DataSnapshot data = await ReadCurrentUserData();
+			var skillPoints = (long)data.Child("SkillPoints").Value;
+			var accPoints = (long)data.Child("AccelerationPoints").Value;
+			
+			if (skillPoints <= 0)
+			{
+				UIManager.Instance.ProfileScreen();
+				return;
+			}
+			
+			await WriteCurrentUserData("SkillPoints", skillPoints - 1);
+			await WriteCurrentUserData("AccelerationPoints", accPoints + 1);
+			UIManager.Instance.ProfileScreen();
+		}
+		
+		public async void DecreaseAccPoints()
+		{
+			DataSnapshot data = await ReadCurrentUserData();
+			var skillPoints = (long)data.Child("SkillPoints").Value;
+			var accPoints = (long)data.Child("AccelerationPoints").Value;
+			
+			if (accPoints <= 0)
+			{
+				UIManager.Instance.ProfileScreen();
+				return;
+			}
+			
+			await WriteCurrentUserData("SkillPoints", skillPoints + 1);
+			await WriteCurrentUserData("AccelerationPoints", accPoints - 1);
+			UIManager.Instance.ProfileScreen();
+		}
+		
+		public async void IncreaseSpdPoints()
+		{
+			DataSnapshot data = await ReadCurrentUserData();
+			var skillPoints = (long)data.Child("SkillPoints").Value;
+			var spdPoints = (long)data.Child("SpeedPoints").Value;
+			
+			if (skillPoints <= 0)
+			{
+				UIManager.Instance.ProfileScreen();
+				return;
+			}
+			
+			await WriteCurrentUserData("SkillPoints", skillPoints - 1);
+			await WriteCurrentUserData("SpeedPoints", spdPoints + 1);
+			UIManager.Instance.ProfileScreen();
+		}
+		
+		public async void DecreaseSpdPoints()
+		{
+			DataSnapshot data = await ReadCurrentUserData();
+			var skillPoints = (long)data.Child("SkillPoints").Value;
+			var spdPoints = (long)data.Child("SpeedPoints").Value;
+			
+			if (spdPoints <= 0)
+			{
+				UIManager.Instance.ProfileScreen();
+				return;
+			}
+			
+			await WriteCurrentUserData("SkillPoints", skillPoints + 1);
+			await WriteCurrentUserData("SpeedPoints", spdPoints - 1);
+			UIManager.Instance.ProfileScreen();
 		}
 	}
 }

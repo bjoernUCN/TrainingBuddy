@@ -1,5 +1,46 @@
 {
   "dependencies": {
+    "com.bedtime.editor-extensions": {
+      "version": "1.0.10",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.bedtime.io"
+    },
+    "com.bedtime.editor-quality-of-life": {
+      "version": "0.0.4",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.bedtime.storage": "1.0.6",
+        "com.bedtime.editor-extensions": "1.0.3"
+      },
+      "url": "https://packages.bedtime.io"
+    },
+    "com.bedtime.reflection-utility": {
+      "version": "1.1.0",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.bedtime.io"
+    },
+    "com.bedtime.safe-action": {
+      "version": "1.2.2",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.bedtime.io"
+    },
+    "com.bedtime.storage": {
+      "version": "1.0.8",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.bedtime.reflection-utility": "1.0.0",
+        "com.bedtime.safe-action": "1.0.0"
+      },
+      "url": "https://packages.bedtime.io"
+    },
     "com.google.external-dependency-manager": {
       "version": "file:C:/Users/ronny/Downloads/com.google.external-dependency-manager-1.2.174.tgz",
       "depth": 0,

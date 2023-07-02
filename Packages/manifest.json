@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.bedtime.editor-quality-of-life": "0.0.4",
     "com.google.external-dependency-manager": "file:C:/Users/ronny/Downloads/com.google.external-dependency-manager-1.2.174.tgz",
     "com.google.firebase.app": "file:C:/Users/ronny/Downloads/com.google.firebase.app-10.1.1.tgz",
     "com.google.firebase.auth": "file:C:/Users/ronny/Downloads/com.google.firebase.auth-10.1.1.tgz",
@@ -48,5 +49,23 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  }
+  },
+  "resolutionStrategy": "highestMinor",
+  "scopedRegistries": [
+    {
+      "name": "Bedtime",
+      "url": "https://packages.bedtime.io",
+      "scopes": [
+        "com.bedtime"
+      ]
+    },
+    {
+      "name": "package.openupm.com",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.cysharp.unitask",
+        "com.openupm"
+      ]
+    }
+  ]
 }

@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "a965c9be",
         "name": "com.TrainingBuddyInc.TrainingBuddy",
-        "processId": 2751,
+        "processId": 9799,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -17,55 +17,43 @@
         {
             "deviceId": "a965c9be",
             "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 22361,
-            "exited": true
-        },
-        {
-            "deviceId": "a965c9be",
-            "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 22728,
-            "exited": true
-        },
-        {
-            "deviceId": "a965c9be",
-            "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 24183,
-            "exited": true
-        },
-        {
-            "deviceId": "a965c9be",
-            "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 25739,
-            "exited": true
-        },
-        {
-            "deviceId": "a965c9be",
-            "name": "com.TrainingBuddyInc.TrainingBuddy",
-            "processId": 27079,
-            "exited": false
-        },
-        {
-            "deviceId": "a965c9be",
-            "name": "com.TrainingBuddyInc.TrainingBuddy",
             "processId": 28303,
-            "exited": false
+            "exited": true
         },
         {
             "deviceId": "a965c9be",
             "name": "com.TrainingBuddyInc.TrainingBuddy",
             "processId": 29637,
-            "exited": false
+            "exited": true
         },
         {
             "deviceId": "a965c9be",
             "name": "com.TrainingBuddyInc.TrainingBuddy",
             "processId": 31941,
-            "exited": false
+            "exited": true
         },
         {
             "deviceId": "a965c9be",
             "name": "com.TrainingBuddyInc.TrainingBuddy",
             "processId": 2751,
+            "exited": true
+        },
+        {
+            "deviceId": "a965c9be",
+            "name": "com.TrainingBuddyInc.TrainingBuddy",
+            "processId": 7649,
+            "exited": false
+        },
+        {
+            "deviceId": "a965c9be",
+            "name": "com.TrainingBuddyInc.TrainingBuddy",
+            "processId": 8830,
+            "exited": false
+        },
+        {
+            "deviceId": "a965c9be",
+            "name": "com.TrainingBuddyInc.TrainingBuddy",
+            "processId": 9799,
             "exited": false
         }
     ],
