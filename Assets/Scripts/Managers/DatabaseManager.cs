@@ -208,7 +208,12 @@ namespace TrainingBuddy.Managers
 				Debug.LogWarning(message: $"Failed to register task with {DBTask.Exception}");
 				return false;
 			}
-
+			DataSnapshot data = await DatabaseManager.Instance.ReadCurrentUserData();
+			var steps = (long)data.Child("StepCount").Value;
+			var buyin = (long)data.Child("BuyIn").Value;
+			
+			await WriteSpecificUserData(playerId, "StepCount", steps + buyin);
+			await WriteSpecificUserData(playerId, "BuyIn", 0);
 			await WriteSpecificUserData(playerId, "Lobby", "");
 		
 			return true;
@@ -244,7 +249,7 @@ namespace TrainingBuddy.Managers
 				{
 					if (raceData.Key == Auth.CurrentUser.UserId)
 					{
-						return raceData.Key;
+						return race.Key;
 					}
 				}
 			}
@@ -287,7 +292,7 @@ namespace TrainingBuddy.Managers
 			return true;
 		}
 		
-		public async void JoinLobby(string lobby)
+		public async Task JoinLobby(string lobby)
 		{
 			var data = await GetAllRaces();
 			
@@ -300,9 +305,9 @@ namespace TrainingBuddy.Managers
 						Debug.Log("ALREADY IN THE ROOM!!!");
 						return;
 					}
+					await WriteCurrentUserData("Lobby", race.Key);
 					await JoinRace(Auth.CurrentUser.UserId, "Client", "Role", race.Key);
 					await JoinRace(Auth.CurrentUser.UserId, 0, "Status", race.Key);
-					await WriteCurrentUserData("Lobby", race.Key);
 					return;
 				}
 			}

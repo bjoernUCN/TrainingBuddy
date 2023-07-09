@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using TrainingBuddy.Managers;
 using UnityEngine;
 
@@ -10,9 +11,9 @@ namespace TrainingBuddy.Races
 			DatabaseManager.Instance.HostLobby();
 		}
 		
-		public void JoinRace(string lobbyId)
+		public async void JoinRace(string lobbyId)
 		{
-			DatabaseManager.Instance.JoinLobby(lobbyId);
+			await DatabaseManager.Instance.JoinLobby(lobbyId);
 			RaceManager.Instance.LobbyScreen(lobbyId);
 		}
 	}

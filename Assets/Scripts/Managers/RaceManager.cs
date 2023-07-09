@@ -46,6 +46,14 @@ namespace TrainingBuddy.Managers
 			RaceList.AddRaces(lobbyList);
 		}
 		
+		public async void BuyIn(string lobbyId)
+		{
+			ClearScreen();
+			raceListUI.SetActive(true);
+
+			RaceList.ShowBuyIn(lobbyId);
+		}
+		
 		public void HostRaceScreen()
 		{
 			ClearScreen();
@@ -59,7 +67,6 @@ namespace TrainingBuddy.Managers
 		{
 			ClearScreen();
 			lobbyUI.SetActive(true);
-			
 			lobby.Initialize(lobbyId);
 		}
 		

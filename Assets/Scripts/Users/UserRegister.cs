@@ -107,6 +107,7 @@ namespace TrainingBuddy.Users
 	                        DatabaseManager.Instance.WriteCurrentUserData("StepSnapshot", -1);
 	                        DatabaseManager.Instance.WriteCurrentUserData("StepCount", -1);
 	                        DatabaseManager.Instance.WriteCurrentUserData("Lobby", "");
+	                        DatabaseManager.Instance.WriteCurrentUserData("BuyIn", 0);
 	                        
 	                        UIManager.Instance.LoginScreen();
 	                    }

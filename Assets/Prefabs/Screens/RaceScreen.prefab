@@ -2368,6 +2368,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   raceListPrefab: {fileID: 7569547648942263592, guid: 311067d48b3f28648968aac88674af83,
     type: 3}
+  buyInPrefab: {fileID: 7569547648942263592, guid: 8285bb18abfc5424ab87058d0adc84cf,
+    type: 3}
 --- !u!1 &5625079415831514178
 GameObject:
   m_ObjectHideFlags: 0
