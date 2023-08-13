@@ -88,7 +88,7 @@ namespace Arkenheim.Quest.Escort
             _originalAcceleration = acceleration;
             _originalDecceleration = decceleration;
             
-            await SessionManager.Instance.SessionStartedCallback();
+            // await SessionManager.Instance.SessionStartedCallback();
 
             if (initializeOnAwake)
             {
@@ -98,11 +98,11 @@ namespace Arkenheim.Quest.Escort
 
         public void Initialize()
         {
-            if (splines.IsNullOrEmpty())
-            {
-                $"No splines asssigned".LogError(this);
-                return;
-            }
+            // if (splines.IsNullOrEmpty())
+            // {
+                // $"No splines asssigned".LogError(this);
+                // return;
+            // }
 
             GetNextDestination();
             
@@ -177,7 +177,7 @@ namespace Arkenheim.Quest.Escort
             rotation = Quaternion.LookRotation(t0PosIsCloser ? forward : -forward, up);
         }
 
-        [ButtonGroup("Move Controls")]
+        // [ButtonGroup("Move Controls")]
         public void StartMoving()
         {
             StartMoving(maxSpeed);
@@ -185,13 +185,13 @@ namespace Arkenheim.Quest.Escort
 
         public void StartMoving(float speed)
         {
-            Updater.UpdateEvent += UpdateSplineAnimate;
+            // Updater.UpdateEvent += UpdateSplineAnimate;
             
             _targetMoveSpeed = speed;
             _currentAcceleration = acceleration;
         }
         
-        [ButtonGroup("Move Controls")]
+        // [ButtonGroup("Move Controls")]
         public void StopMoving()
         {
             _targetMoveSpeed = 0f;
@@ -205,7 +205,7 @@ namespace Arkenheim.Quest.Escort
 
             if (_t == _targetT || _currentMoveSpeed == 0f)
             {
-                Updater.UpdateEvent -= UpdateSplineAnimate;
+                // Updater.UpdateEvent -= UpdateSplineAnimate;
             }
         }
 

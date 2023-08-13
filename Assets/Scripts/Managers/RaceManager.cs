@@ -1,6 +1,10 @@
+using System;
+using System.Collections.Generic;
+using BedtimeCore.Utility;
 using TrainingBuddy.Races;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.Splines;
 
 namespace TrainingBuddy.Managers
 {
@@ -12,6 +16,9 @@ namespace TrainingBuddy.Managers
 		[SerializeField] private GameObject watchUI;
 		[SerializeField] private RaceList RaceList;
 		[SerializeField] private Lobby lobby;
+		
+		[SerializeField] private GameObject runnerPrefab;
+		[SerializeField] private List<Track> tracks = new ();
 		
 		private GameObject raceListUI => RaceList.gameObject;
 		
@@ -75,5 +82,25 @@ namespace TrainingBuddy.Managers
 			ClearScreen();
 			watchUI.SetActive(true);
 		}
+		
+		[InspectorButton]
+		public void StartRace()
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				GameObject runner = Instantiate(runnerPrefab, tracks[i].StartPos.position, Quaternion.identity);
+				runner.GetComponent<RunOnSpline>().SplineContainer = tracks[i].Spline;
+				runner.GetComponent<RunOnSpline>().targetMoveSpeed = 200f + i * 30f;
+				runner.GetComponent<RunOnSpline>().acceleration = 10f;
+				runner.transform.parent = tracks[i].Spline.transform;
+			}
+		}
+	}
+    
+	[Serializable]
+	public struct Track
+	{
+		public SplineContainer Spline;
+		public Transform StartPos;
 	}
 }
