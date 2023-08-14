@@ -10,6 +10,8 @@ namespace TrainingBuddy.Managers
 {
 	public class RaceManager : Singleton<RaceManager>
 	{
+		[SerializeField] private Camera mainCamera;
+		[SerializeField] private GameObject mainCanvas;
 		[SerializeField] private GameObject mainUI;
 		[SerializeField] private GameObject hostUI;
 		[SerializeField] private GameObject lobbyUI;
@@ -80,7 +82,7 @@ namespace TrainingBuddy.Managers
 		public void WatchRaceScreen()
 		{
 			ClearScreen();
-			watchUI.SetActive(true);
+			mainCanvas.SetActive(false);
 		}
 		
 		[InspectorButton]
@@ -93,6 +95,8 @@ namespace TrainingBuddy.Managers
 				runner.GetComponent<RunOnSpline>().targetMoveSpeed = 200f + i * 30f;
 				runner.GetComponent<RunOnSpline>().acceleration = 10f;
 				runner.transform.parent = tracks[i].Spline.transform;
+				mainCamera.transform.parent = runner.transform;
+				mainCamera.transform.localPosition = new Vector3(0, 2, -5); 
 			}
 		}
 	}
