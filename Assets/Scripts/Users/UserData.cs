@@ -126,11 +126,6 @@ namespace TrainingBuddy.Users
 		
 		public void StartLocationUpdater()
 		{
-			if (isLocationUpdaterRunning)
-			{
-				return;
-			}
-			
 			if (Permission.HasUserAuthorizedPermission("android.permission.ACCESS_FINE_LOCATION"))
 			{
 				if (!Input.location.isEnabledByUser)
@@ -144,12 +139,18 @@ namespace TrainingBuddy.Users
 				}
 				
 				LocationHandler();
-				isLocationUpdaterRunning = true;
 			}
 		}
 
 		private async Task LocationHandler(float delay = 10f)
 		{
+			if (isLocationUpdaterRunning)
+			{
+				return;
+			}
+			
+			isLocationUpdaterRunning = true;
+			
 			while (true)
 			{
 				if (Input.location.status == LocationServiceStatus.Failed)

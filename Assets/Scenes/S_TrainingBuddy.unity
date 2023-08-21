@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.20447607, g: 0.35199207, b: 0.46893442, a: 1}
+  m_IndirectSpecularColor: {r: 0.20445111, g: 0.35199025, b: 0.4688913, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2063,7 +2063,7 @@ PrefabInstance:
     - target: {fileID: 1996130418216401456, guid: 614fcae8aaf841645ba9e9e27a689f00,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -855.1101
       objectReference: {fileID: 0}
     - target: {fileID: 1996130419286932655, guid: 614fcae8aaf841645ba9e9e27a689f00,
         type: 3}
@@ -2088,7 +2088,7 @@ PrefabInstance:
     - target: {fileID: 1996130419718316841, guid: 614fcae8aaf841645ba9e9e27a689f00,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -995.1101
       objectReference: {fileID: 0}
     - target: {fileID: 1996130419718316855, guid: 614fcae8aaf841645ba9e9e27a689f00,
         type: 3}
@@ -2123,7 +2123,7 @@ PrefabInstance:
     - target: {fileID: 2429638185694773087, guid: 614fcae8aaf841645ba9e9e27a689f00,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -960.1101
       objectReference: {fileID: 0}
     - target: {fileID: 2439519863170177501, guid: 614fcae8aaf841645ba9e9e27a689f00,
         type: 3}
@@ -2753,7 +2753,7 @@ PrefabInstance:
     - target: {fileID: 5992591884185298946, guid: 614fcae8aaf841645ba9e9e27a689f00,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -960.1101
       objectReference: {fileID: 0}
     - target: {fileID: 6076424356937050206, guid: 614fcae8aaf841645ba9e9e27a689f00,
         type: 3}
@@ -2790,6 +2790,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: TrainingBuddy.Managers.UIManager, Assembly-CSharp
       objectReference: {fileID: 0}
+    - target: {fileID: 6469796206975818591, guid: 614fcae8aaf841645ba9e9e27a689f00,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6612143715607405506, guid: 614fcae8aaf841645ba9e9e27a689f00,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -2828,7 +2833,7 @@ PrefabInstance:
     - target: {fileID: 6986995886850372883, guid: 614fcae8aaf841645ba9e9e27a689f00,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -750.1101
       objectReference: {fileID: 0}
     - target: {fileID: 7285614056609815189, guid: 614fcae8aaf841645ba9e9e27a689f00,
         type: 3}
@@ -2984,7 +2989,7 @@ PrefabInstance:
     - target: {fileID: 8115666740206595415, guid: 614fcae8aaf841645ba9e9e27a689f00,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -1135.1101
       objectReference: {fileID: 0}
     - target: {fileID: 8178742046855974925, guid: 614fcae8aaf841645ba9e9e27a689f00,
         type: 3}
@@ -3049,7 +3054,7 @@ PrefabInstance:
     - target: {fileID: 8742173487027831006, guid: 614fcae8aaf841645ba9e9e27a689f00,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -899.2237
+      value: -960.1101
       objectReference: {fileID: 0}
     - target: {fileID: 8829116763841266176, guid: 614fcae8aaf841645ba9e9e27a689f00,
         type: 3}
@@ -3080,6 +3085,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -150
+      objectReference: {fileID: 0}
+    - target: {fileID: 9152352660714383933, guid: 614fcae8aaf841645ba9e9e27a689f00,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 569796084}
+    - target: {fileID: 9152352660714383933, guid: 614fcae8aaf841645ba9e9e27a689f00,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: WatchRaceScreen
+      objectReference: {fileID: 0}
+    - target: {fileID: 9152352660714383933, guid: 614fcae8aaf841645ba9e9e27a689f00,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: TrainingBuddy.Managers.RaceManager, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1336517886531354340, guid: 614fcae8aaf841645ba9e9e27a689f00, type: 3}

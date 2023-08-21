@@ -15,7 +15,6 @@ namespace TrainingBuddy.Managers
 		[SerializeField] private GameObject mainUI;
 		[SerializeField] private GameObject hostUI;
 		[SerializeField] private GameObject lobbyUI;
-		[SerializeField] private GameObject watchUI;
 		[SerializeField] private RaceList RaceList;
 		[SerializeField] private Lobby lobby;
 		
@@ -29,7 +28,6 @@ namespace TrainingBuddy.Managers
 			mainUI.SetActive(false);
 			hostUI.SetActive(false);
 			lobbyUI.SetActive(false);
-			watchUI.SetActive(false);
 			raceListUI.SetActive(false);
 		}
 		
@@ -83,6 +81,7 @@ namespace TrainingBuddy.Managers
 		{
 			ClearScreen();
 			mainCanvas.SetActive(false);
+			StartRace();
 		}
 		
 		[InspectorButton]
