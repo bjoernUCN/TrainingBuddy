@@ -3,10 +3,10 @@
     "com.bedtime.copy-paste-component-header": "1.1.0",
     "com.bedtime.core": "1.8.2",
     "com.bedtime.editor-quality-of-life": "0.0.4",
-    "com.google.external-dependency-manager": "file:C:/Users/ronny/Downloads/com.google.external-dependency-manager-1.2.174.tgz",
-    "com.google.firebase.app": "file:C:/Users/ronny/Downloads/com.google.firebase.app-10.1.1.tgz",
-    "com.google.firebase.auth": "file:C:/Users/ronny/Downloads/com.google.firebase.auth-10.1.1.tgz",
-    "com.google.firebase.database": "file:C:/Users/ronny/Downloads/com.google.firebase.database-10.1.1.tgz",
+    "com.google.external-dependency-manager": "1.2.178",
+    "com.google.firebase.app": "file:C:/Users/bjoer/Downloads/com.google.firebase.app-10.1.1.tgz",
+    "com.google.firebase.auth": "file:C:/Users/bjoer/Downloads/com.google.firebase.auth-10.1.1.tgz",
+    "com.google.firebase.database": "file:C:/Users/bjoer/Downloads/com.google.firebase.database-10.1.1.tgz",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.adaptiveperformance.samsung.android": "4.0.2",
     "com.unity.ai.navigation": "1.1.4",
@@ -66,6 +66,7 @@
       "url": "https://package.openupm.com",
       "scopes": [
         "com.cysharp.unitask",
+        "com.google.external-dependency-manager",
         "com.openupm"
       ]
     }
